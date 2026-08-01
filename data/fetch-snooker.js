@@ -17,7 +17,7 @@ const OUTPUT_DIR = resolve(__dirname, 'output');
 const JS_OUTPUT = resolve(OUTPUT_DIR, 'snooker-data.js');
 const JSON_OUTPUT = resolve(OUTPUT_DIR, 'snooker-data.json');
 
-const BASE_URL = 'http://api.snooker.org/';
+const BASE_URL = 'https://api.snooker.org/';
 const USER_AGENT = 'CueMaster-DataPipeline/1.0';
 const CACHE_FILE = resolve(OUTPUT_DIR, '.cache.json');
 
@@ -65,56 +65,75 @@ async function main() {
   mkdirSync(OUTPUT_DIR, { recursive: true });
 
   const cache = loadCache();
-  const season = 2026;   // current season year (start)
+  const seasons = [2026, 2025];  // try current season first, fall back to last completed
   const results = {
     generated: new Date().toISOString(),
     source: 'api.snooker.org',
-    season: `${season}/${String(season+1).slice(2)}`,
+    season: '',
     events: [],
     rankings: [],
     liveMatches: [],
   };
 
   try {
-    // 1) Fetch events for current season
-    console.log('\n📅 Fetching events...');
-    const events = await fetchJSON(`?t=5&s=${season}`);
-    results.events = Array.isArray(events) ? events : [];
-    console.log(`  ✅ Got ${results.events.length} events`);
-    await delay(7000); // rate limit: 10/min → ~6s between calls
+    // Try each season until we get data
+    for (const season of seasons) {
+      // 1) Fetch events
+      console.log(`\n📅 Fetching events for season ${season}...`);
+      const events = await fetchJSON(`?t=5&s=${season}`);
+      if (Array.isArray(events) && events.length > 0) {
+        results.events = events;
+        results.season = `${season}/${String(season+1).slice(2)}`;
+        console.log(`  ✅ Got ${events.length} events`);
 
-    // 2) Fetch rankings
-    console.log('\n📊 Fetching rankings...');
-    const rankings = await fetchJSON(`?rt=MoneyRankings&s=${season}`);
-    results.rankings = Array.isArray(rankings) ? rankings : [];
-    console.log(`  ✅ Got ${results.rankings.length} ranked players`);
-    await delay(7000);
+        // 2) Fetch rankings
+        console.log(`\n📊 Fetching rankings for season ${season}...`);
+        await delay(7000);
+        const rankings = await fetchJSON(`?rt=MoneyRankings&s=${season}`);
+        if (Array.isArray(rankings) && rankings.length > 0) {
+          results.rankings = rankings;
+          console.log(`  ✅ Got ${rankings.length} ranked players`);
+        } else {
+          console.log(`  ⚠️ No rankings returned for season ${season}`);
+        }
 
-    // 3) Fetch live matches
-    console.log('\n🔴 Fetching live matches...');
-    const live = await fetchJSON('?t=4');
-    results.liveMatches = Array.isArray(live) ? live : [];
-    console.log(`  ✅ Got ${results.liveMatches.length} live/ongoing matches`);
+        // 3) Fetch live matches
+        console.log('\n🔴 Fetching live matches...');
+        await delay(7000);
+        const live = await fetchJSON('?t=4');
+        results.liveMatches = Array.isArray(live) ? live : [];
+        console.log(`  ✅ Got ${results.liveMatches.length} live matches`);
 
-    // 4) For each event, try to get matches (only for upcoming/live events)
-    const upcomingOrLive = results.events.filter(e => {
-      const endDate = e.EndDate || e.End || '';
-      return !endDate || new Date(endDate) >= new Date();
-    }).slice(0, 5); // Limit to 5 events to stay within rate limit
-    results.eventMatches = {};
-    for (const evt of upcomingOrLive) {
-      const evtId = evt.ID || evt.id;
-      if (!evtId) continue;
-      console.log(`\n🎯 Fetching matches for event #${evtId} (${evt.Name || evt.name || '?'})...`);
-      await delay(7000);
-      try {
-        const matches = await fetchJSON(`?e=${evtId}`);
-        results.eventMatches[evtId] = Array.isArray(matches) ? matches : [];
-        console.log(`  ✅ Got ${results.eventMatches[evtId].length} matches`);
-      } catch (e) {
-        console.warn(`  ⚠️ Failed: ${e.message}`);
-        results.eventMatches[evtId] = [];
+        // 4) Fetch match details for upcoming/live events
+        const upcomingOrLive = events.filter(e => {
+          const endDate = e.EndDate || e.End || '';
+          return !endDate || new Date(endDate) >= new Date();
+        }).slice(0, 5);
+        results.eventMatches = {};
+        for (const evt of upcomingOrLive) {
+          const evtId = evt.ID || evt.id;
+          if (!evtId) continue;
+          console.log(`\n🎯 Fetching matches for event #${evtId} (${evt.Name || evt.name || '?'})...`);
+          await delay(7000);
+          try {
+            const matches = await fetchJSON(`?e=${evtId}`);
+            results.eventMatches[evtId] = Array.isArray(matches) ? matches : [];
+            console.log(`  ✅ Got ${results.eventMatches[evtId].length} matches`);
+          } catch (e) {
+            console.warn(`  ⚠️ Failed: ${e.message}`);
+            results.eventMatches[evtId] = [];
+          }
+        }
+        break; // Found data, stop trying more seasons
+      } else {
+        console.log(`  ⚠️ No events for season ${season}, trying next...`);
       }
+      await delay(7000);
+    }
+
+    // If still no data after trying all seasons
+    if (results.events.length === 0) {
+      console.log('\n⚠️ No event data found for any season. API may be unavailable or season data not yet published.');
     }
 
     // Save cache
