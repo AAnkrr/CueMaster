@@ -2,40 +2,30 @@ name: Update Snooker Data
 
 on:
   schedule:
-    # 每天 UTC 0:00 (北京时间 8:00) 和 UTC 12:00 (北京时间 20:00) 各运行一次
     - cron: '0 0,12 * * *'
-  workflow_dispatch:  # 允许手动触发
-    inputs:
-      force:
-        description: 'Force update even if no changes'
-        required: false
-        default: 'false'
+  workflow_dispatch:
 
 jobs:
-  fetch-data:
+  fetch:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 允许推送提交
-
+      contents: write
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Fetch snooker data
         working-directory: ./data
         run: node fetch-snooker.js
-
-      - name: Commit & push if changed
+      - name: Commit and push
         run: |
           git config user.name "CueMaster Bot"
           git config user.email "bot@cuemaster.app"
           git add data/output/
           if git diff --staged --quiet; then
-            echo "No changes, skipping commit"
+            echo "No changes"
           else
-            git commit -m "📊 Auto-update snooker data [skip ci]"
+            git commit -m "data: auto-update [skip ci]"
             git push
           fi
