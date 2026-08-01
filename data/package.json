@@ -1,0 +1,13 @@
+{
+  "name": "cuemaster-data",
+  "version": "1.0.0",
+  "description": "CueMaster snooker data pipeline — fetches from api.snooker.org",
+  "type": "module",
+  "scripts": {
+    "fetch": "node fetch-snooker.js",
+    "serve": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

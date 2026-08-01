@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>CueMaster 杆大师 · 斯诺克&台球赛事追踪</title>
+<style>
+:root{--bg:#0D1B16;--sur:#152A20;--card:#1A3328;--green:#1B7A4A;--greenL:#25A85A;--gold:#C8A951;--goldL:#E0C870;--red:#FF4444;--tc:#FF4500;--inv:#4169E1;--china:#C41E3A;--nine:#1E3A8A;--t1:#fff;--t2:#B0B8B1;--t3:#6B736B;--r:16px;--rs:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#111;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:8px}
+.phone{width:400px;max-width:100vw;height:95vh;max-height:900px;background:var(--bg);border-radius:36px;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;position:relative}
+.sb{display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:12px;font-weight:600;color:var(--t1);flex-shrink:0}
+.nh{display:flex;justify-content:space-between;align-items:center;padding:6px 20px 4px;flex-shrink:0}
+.nt{font-size:28px;font-weight:800;letter-spacing:-.5px;color:var(--t1)}
+.ns{cursor:pointer;background:var(--sur);padding:7px 12px;border-radius:20px;border:1px solid var(--greenL);font-size:12px;color:var(--greenL);font-weight:600}
+.sp{display:flex;margin:4px 16px;background:var(--sur);border-radius:12px;padding:2px;flex-shrink:0}
+.so{flex:1;text-align:center;padding:8px 4px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);transition:all .15s}
+.so.ac{background:var(--green);color:#fff;font-weight:700}.so .em{font-size:15px;display:block;margin-bottom:1px}
+.so.c8.ac{background:var(--china)}.so.n9.ac{background:var(--nine)}
+#main{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+#dv{overflow:hidden;min-height:0}
+.ct{flex:1;padding:0 16px;overflow-y:auto;min-height:0;scrollbar-width:none;-ms-overflow-style:none}
+.ct::-webkit-scrollbar{display:none}
+.st{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px}.st.live{color:var(--red)}.st.up{color:var(--gold)}.st.done{color:var(--t3)}
+.tc2{background:var(--sur);border-radius:var(--r);padding:12px;margin-bottom:8px;border-left:4px solid var(--gold);cursor:pointer;transition:transform .12s}
+.tc2:active{transform:scale(.985)}.tc2.tc{border-left-color:var(--tc)}.tc2.rk{border-left-color:var(--gold)}.tc2.inv2{border-left-color:var(--inv)}
+.tb{display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap}
+.bd{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px}
+.bd.tc{background:var(--tc)22;color:var(--tc)}.bd.rk{background:var(--gold)22;color:var(--gold)}.bd.inv2{background:var(--inv)22;color:var(--inv)}.bd.pr{background:var(--gold)15;color:var(--gold)}
+.tn{font-size:14px;font-weight:700;margin-bottom:2px;line-height:1.3;color:var(--t1)}.tl{font-size:11px;color:var(--t2);margin-bottom:5px}
+.tf{display:flex;justify-content:space-between;align-items:center;font-size:11px}.td{color:var(--t2)}
+.cd{background:var(--green)22;color:var(--greenL);padding:3px 9px;border-radius:20px;font-weight:700;font-size:11px}
+.cd.live{background:#ff000018;color:var(--red);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.done{font-size:11px;color:var(--t3)}
+.fb{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;flex-shrink:0}.fb::-webkit-scrollbar{display:none}
+.fp{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:var(--t2);transition:all .12s}
+.fp.ac{background:var(--green)22;border-color:var(--green);color:var(--greenL)}
+.sb2{display:flex;align-items:center;background:var(--sur);border-radius:10px;padding:8px 12px;margin-bottom:4px;gap:8px;flex-shrink:0}
+.sb2 input{flex:1;background:none;border:none;color:var(--t1);font-size:13px;outline:none}.sb2 input::placeholder{color:var(--t3)}
+.rr{display:flex;align-items:center;padding:10px 10px;background:var(--sur);border-radius:8px;margin-bottom:2px;cursor:pointer;transition:background .12s}
+.rr:active{background:var(--card)}.rr.t3{background:var(--green)08}
+.rn{width:24px;font-weight:700;font-size:13px;text-align:center;flex-shrink:0}
+.rn.g1{color:#FFD700}.rn.g2{color:#C0C0C0}.rn.g3{color:#CD7F32}
+.av2{width:34px;height:34px;border-radius:50%;overflow:hidden;flex-shrink:0;position:relative;background:var(--green)18}
+.av2 img{width:100%;height:100%;object-fit:cover}
+.av2 .avf{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--green);font-size:13px}
+.av2 .flg2{position:absolute;bottom:-3px;right:-3px;font-size:11px;background:var(--bg);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--bg);z-index:2}
+.nc{flex:1;margin-left:8px}.nc .nm{font-size:12px;font-weight:600;color:var(--t1)}.nc .na{font-size:9px;color:var(--t3);margin-top:1px}
+.rp{font-size:11px;color:var(--gold);font-weight:600;margin-right:6px}
+.rc{font-size:10px;font-weight:700;width:28px;text-align:center}.rc.up{color:#44CC44}.rc.dn{color:var(--red)}.rc.sm{color:var(--t3)}
+.sec-label{font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:8px 0 4px 2px}
+.mp2{display:flex;align-items:center;margin:4px 16px 4px;padding:8px 12px;background:var(--gold)08;border-radius:var(--rs);border:1px solid var(--gold)25;cursor:pointer;flex-shrink:0}
+.mp2 .mpi2{flex:1;margin-left:8px}.mp2 .mpn2{font-size:12px;font-weight:600;color:var(--t1)}.mp2 .mpr2{font-size:10px;color:var(--t2);margin-top:1px}
+.mp2 .mppt2{font-size:12px;font-weight:700;color:var(--gold)}.mp2 .cls2{color:var(--t3);margin-left:4px;font-size:10px;cursor:pointer;padding:3px}
+.mod{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:100}.mod.hidden{display:none}
+.mc{background:var(--sur);border-radius:20px;padding:16px;width:290px;max-height:70vh;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;border:1px solid rgba(255,255,255,.08)}
+.mc::-webkit-scrollbar{display:none}
+.mct{font-size:16px;font-weight:700;color:var(--t1);text-align:center;margin-bottom:10px}
+.mo{display:flex;align-items:center;gap:8px;padding:10px 8px;border-radius:10px;margin-bottom:2px;cursor:pointer}.mo.ac3{background:var(--green)18}
+.mca{text-align:center;padding:10px 0;color:var(--t2);cursor:pointer;font-size:14px;border-top:1px solid rgba(255,255,255,.06);margin-top:6px}
+.back{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--greenL);cursor:pointer;padding:8px 16px}
+.hero{background:var(--sur);border-radius:var(--r);padding:16px;margin-bottom:12px}.heron{font-size:18px;font-weight:800;color:var(--t1);margin:6px 0}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.ic{background:var(--sur);border-radius:10px;padding:10px;text-align:center}.ic .v2{font-size:16px;font-weight:800;color:var(--t1)}.ic .l2{font-size:9px;color:var(--t3);margin-top:3px}
+.br-section{margin-bottom:14px}.br-title{font-size:11px;font-weight:700;color:var(--t2);margin-bottom:5px;padding:5px 10px;background:var(--sur);border-radius:8px;text-align:center}
+.br-match{background:var(--sur);border-radius:8px;padding:9px 12px;margin-bottom:3px}
+.br-match .br-row{display:flex;align-items:center;justify-content:space-between}
+.br-match .br-p{flex:1;font-size:11px;color:var(--t1);display:flex;align-items:center;gap:4px}.br-match .br-p.br-w{font-weight:700}
+.br-match .br-p2{flex:1;text-align:right;font-size:11px;color:var(--t1);display:flex;align-items:center;justify-content:flex-end;gap:4px}.br-match .br-p2.br-w{font-weight:700}
+.br-score{font-size:14px;font-weight:800;color:var(--t1);padding:0 8px;min-width:44px;text-align:center}.br-score.ls{color:var(--red);animation:pulse 1.5s infinite}
+.tab2{display:flex;background:var(--sur);border-top:1px solid rgba(255,255,255,.04);padding:4px 0 16px;flex-shrink:0}
+.ti2{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--t3);font-size:10px;padding:4px 0;transition:color .12s}.ti2.ac{color:var(--green)}.ti2 .tii{font-size:19px}
+.hidden{display:none!important}
+
+.pf2{display:flex;align-items:center;gap:10px;padding:12px;background:var(--sur);border-radius:var(--r);margin-bottom:14px;cursor:pointer}
+.sg{background:var(--sur);border-radius:var(--rs);padding:2px 14px;margin-bottom:12px}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}.sr:last-child{border:none}
+.srl{font-size:13px;color:var(--t1)}
+.tg{width:44px;height:24px;background:var(--green);border-radius:12px;position:relative;cursor:pointer}.tg::after{content:'';position:absolute;top:2px;right:2px;width:20px;height:20px;background:#fff;border-radius:50%}
+.prc{background:linear-gradient(135deg,var(--gold)18,var(--sur));border:1px solid var(--gold)35;border-radius:var(--r);padding:12px;margin-bottom:14px}
+.prt{font-size:14px;font-weight:800;color:var(--gold);margin-bottom:4px}.prd{font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.5}
+.pl{display:flex;gap:8px}.pl2{flex:1;text-align:center;padding:10px;border-radius:10px;background:rgba(255,255,255,.03);cursor:pointer;font-size:12px;color:var(--t2)}
+.pl2.rec{background:var(--gold)22;border:1.5px solid var(--gold)}.pl2 .price{font-weight:800;font-size:14px;margin-top:2px;color:var(--gold)}
+.rb{background:orange;color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:10px;display:inline-block;margin-bottom:2px}
+.cat-sep{display:flex;align-items:center;gap:8px;margin:16px 0 8px}
+.cat-sep .line{flex:1;height:1px;background:rgba(255,255,255,.08)}
+.cat-sep .lbl{font-size:10px;color:var(--t3);font-weight:600;white-space:nowrap}
+/* new: match time & reminders */
+.mt2{font-size:10px;color:var(--gold);font-weight:600;background:var(--gold)12;padding:2px 8px;border-radius:10px;display:inline-block;margin-left:4px}
+.pro-badge{background:linear-gradient(135deg,#C8A951,#E0C870);color:#000;font-size:8px;font-weight:800;padding:2px 7px;border-radius:10px;display:inline-block;letter-spacing:.5px}
+.pro-lock{color:var(--gold);font-size:10px;cursor:pointer;opacity:.7}
+.upcoming-section{margin-bottom:14px}
+.upcoming-header{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.upcoming-match{background:var(--sur);border-radius:10px;padding:10px 12px;margin-bottom:5px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:background .12s}
+.upcoming-match:active{background:var(--card)}
+.upcoming-match .um-info{flex:1;min-width:0}
+.upcoming-match .um-name{font-size:11px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upcoming-match .um-meta{font-size:9px;color:var(--t3);margin-top:2px}
+.upcoming-match .um-time{font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap;text-align:right}
+.reminder-btn2{background:var(--green)18;border:1px solid var(--green)30;border-radius:16px;padding:4px 10px;font-size:10px;font-weight:600;color:var(--greenL);cursor:pointer;white-space:nowrap;transition:all .12s}
+.reminder-btn2:active{background:var(--green)30}
+.reminder-btn2.pro-gated{background:var(--gold)10;border-color:var(--gold)25;color:var(--gold)}
+.reminder-btn2.set{background:var(--green);color:#fff;border-color:var(--green)}
+.api-status{font-size:9px;padding:3px 8px;border-radius:10px;display:inline-flex;align-items:center;gap:4px}
+.api-status.online{background:var(--green)15;color:var(--greenL)}.api-status.offline{background:var(--gold)15;color:var(--gold)}
+.pro-section{background:linear-gradient(135deg,var(--gold)10,var(--sur));border:1px solid var(--gold)25;border-radius:var(--r);padding:14px;margin-bottom:12px}
+.pro-section .pro-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px}
+.pro-section .pro-desc{font-size:10px;color:var(--t2);margin-bottom:10px;line-height:1.5}
+.pro-features{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.pro-feat{font-size:9px;padding:3px 8px;border-radius:10px;background:var(--gold)10;color:var(--gold);white-space:nowrap}
+.pro-feat.free{background:var(--t3)15;color:var(--t2);text-decoration:line-through}
+.rem-stats{display:flex;gap:8px;align-items:center;font-size:10px;color:var(--t2)}
+.rem-stats .rem-used{font-weight:700;color:var(--gold)}
+.data-refresh{font-size:9px;color:var(--t3);text-align:center;padding:4px 0;cursor:pointer}
+/* widget mockup gallery */
+.wg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.wc{border-radius:20px;padding:14px;position:relative;overflow:hidden;cursor:default;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s}
+.wc:active{transform:scale(.97)}
+.wc .wh{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.wc .wi{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.wc .wn{font-size:9px;font-weight:600;opacity:.7}
+.wc .wv{font-size:26px;font-weight:800;margin:4px 0}
+.wc .ws{font-size:9px;opacity:.6}
+.wc .lock-overlay{position:absolute;top:0;left:0;right:0;bottom:0;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;z-index:2;border-radius:20px}
+.wc .lock-icon{font-size:22px}.wc .lock-text{font-size:10px;font-weight:700;color:#fff}
+/* theme: classic green */
+.wc.th-green{background:linear-gradient(145deg,#0D2B1D,#153A28);border:1px solid rgba(27,122,74,.3);color:#e0e0e0}
+.wc.th-green .wi{background:#1B7A4A;color:#fff}.wc.th-green .wv{color:#25A85A}
+/* theme: midnight */
+.wc.th-midnight{background:linear-gradient(145deg,#0a0a0a,#1a1a1a);border:1px solid rgba(255,255,255,.08);color:#ccc}
+.wc.th-midnight .wi{background:#333;color:#fff}.wc.th-midnight .wv{color:#fff}
+/* theme: gold */
+.wc.th-gold{background:linear-gradient(145deg,#1a180a,#2a2410);border:1px solid rgba(200,169,81,.3);color:#ddd}
+.wc.th-gold .wi{background:linear-gradient(135deg,#C8A951,#E0C870);color:#1a1a0a}.wc.th-gold .wv{color:#E0C870}
+/* theme: orange */
+.wc.th-orange{background:linear-gradient(145deg,#1a0f08,#2a1810);border:1px solid rgba(255,107,53,.3);color:#eee}
+.wc.th-orange .wi{background:linear-gradient(135deg,#FF6B35,#FF8C5A);color:#fff}.wc.th-orange .wv{color:#FF6B35}
+/* theme: white */
+.wc.th-white{background:linear-gradient(145deg,#f0f0f0,#e8e8e8);border:1px solid rgba(0,0,0,.06);color:#1a1a1a}
+.wc.th-white .wi{background:#333;color:#fff}.wc.th-white .wv{color:#000}.wc.th-white .wn{opacity:.5}.wc.th-white .ws{opacity:.4}
+/* theme: ocean */
+.wc.th-ocean{background:linear-gradient(145deg,#0a1628,#0d1f3c);border:1px solid rgba(30,58,138,.4);color:#d0d8f0}
+.wc.th-ocean .wi{background:linear-gradient(135deg,#1E3A8A,#3B82F6);color:#fff}.wc.th-ocean .wv{color:#60A5FA}
+/* theme: lavender */
+.wc.th-lavender{background:linear-gradient(145deg,#0f0a1a,#1a1030);border:1px solid rgba(124,58,237,.3);color:#e0d8f0}
+.wc.th-lavender .wi{background:linear-gradient(135deg,#7C3AED,#A78BFA);color:#fff}.wc.th-lavender .wv{color:#A78BFA}
+/* theme: china red */
+.wc.th-red{background:linear-gradient(145deg,#1a0a0a,#2a1015);border:1px solid rgba(196,30,58,.4);color:#f0d0d0}
+.wc.th-red .wi{background:linear-gradient(135deg,#C41E3A,#E04050);color:#FFD700}.wc.th-red .wv{color:#FFD700}
+.wg-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.wg-header .wgh-t{font-size:12px;font-weight:700;color:var(--t1)}
+.wg-tabs{display:flex;gap:4px;overflow-x:auto;padding:4px 0;margin-bottom:14px;flex-shrink:0}
+.wg-tabs::-webkit-scrollbar{display:none}
+.wg-tab{padding:8px 14px;border-radius:18px;font-size:10px;font-weight:600;white-space:nowrap;cursor:pointer;border:1px solid rgba(255,255,255,.08);color:var(--t2);transition:all .12s}
+.wg-tab.ac{background:var(--green)22;border-color:var(--green);color:var(--greenL)}
+.wg-desc{font-size:10px;color:var(--t3);text-align:center;padding:6px 0;line-height:1.5}
+.wg-compare{display:flex;gap:10px;margin:12px 0}
+.wg-compare>div{flex:1;border-radius:16px;padding:12px;text-align:center}
+.wg-compare .free-side{background:var(--sur);border:1px solid rgba(255,255,255,.06)}
+.wg-compare .pro-side{background:linear-gradient(135deg,var(--gold)10,var(--sur));border:1px solid var(--gold)30}
+.wg-compare .side-label{font-size:9px;font-weight:700;margin-bottom:6px}
+.wg-compare .side-label.free{color:var(--t3)}.wg-compare .side-label.pro{color:var(--gold)}
+.wg-compare .side-item{font-size:9px;padding:3px 0;color:var(--t2)}
+</style>
+</head>
+<body>
+<div class="phone" id="app">
+<div class="sb"><span>9:41</span><span>📶 🔋 91%</span></div>
+<div id="main">
+<div class="nh"><span class="nt" id="pt">赛程</span><span class="ns" id="ssbtn" onclick="toggleSeason()">2026/27 ▾</span></div>
+<div class="sp" id="sp">
+  <div class="so ac" data-s="snooker" onclick="selSport('snooker')"><span class="em">🎱</span>斯诺克</div>
+  <div class="so" data-s="chinese8" onclick="selSport('chinese8')"><span class="em">🔴</span>中式八球</div>
+  <div class="so" data-s="nineball" onclick="selSport('nineball')"><span class="em">🔵</span>九球</div>
+</div>
+<div id="mpb"></div>
+<div class="ct" id="pc"></div>
+</div>
+<div id="dv" class="hidden" style="flex:1;display:flex;flex-direction:column">
+  <div class="back" onclick="showMain()">← 返回</div>
+  <div class="ct" id="dc"></div>
+</div>
+<div class="mod hidden" id="sm"><div class="mc"><div class="mct">选择赛季</div><div id="sl"></div><div class="mca" onclick="toggleSeason()">取消</div></div></div>
+<div class="mod hidden" id="pm"><div class="mc"><div class="mct">选择主球员</div><div class="ct" id="plist" style="max-height:320px;padding:0"></div><div class="mca" onclick="closePM()">取消</div></div></div>
+<div class="tab2" id="tab">
+  <div class="ti2 ac" data-t="schedule" onclick="swTab('schedule')"><span class="tii">📅</span>赛程</div>
+  <div class="ti2" data-t="rankings" onclick="swTab('rankings')"><span class="tii">📊</span>排名</div>
+  <div class="ti2" data-t="players" onclick="swTab('players')"><span class="tii">👥</span>球员</div>
+  <div class="ti2" data-t="widgets" onclick="swTab('widgets')"><span class="tii">🧩</span>小组件</div>
+  <div class="ti2" data-t="profile" onclick="swTab('profile')"><span class="tii">👤</span>我的</div>
+</div>
+</div>
+
+<script src="../data/output/snooker-data.js" onerror="console.warn('snooker-data.js not found, using built-in data')"></script>
+<script>
+// ====== PLAYER PHOTO ======
+function photoUrl(lastName){var n=lastName.toLowerCase();return[`https://images.weserv.nl/?url=https://cdn.snooker.org/headshots/${n}.png&w=80&h=80&fit=cover&default=404`,`https://wsrv.nl/?url=https://cdn.snooker.org/headshots/${n}.png&w=80&h=80&fit=cover`,`https://cdn.snooker.org/headshots/${n}.png`]}
+
+const FL={ENG:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',SCO:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',WAL:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',NIR:'🇬🇧',CHN:'🇨🇳',AUS:'🇦🇺',BEL:'🇧🇪',IRI:'🇮🇷',ESP:'🇪🇸',GER:'🇩🇪',USA:'🇺🇸',AUT:'🇦🇹',TPE:'🇹🇼',PHI:'🇵🇭',POL:'🇵🇱',THA:'🇹🇭',IND:'🇮🇳',HKG:'🇭🇰',PAK:'🇵🇰',SUI:'🇨🇭',NOR:'🇳🇴',CAN:'🇨🇦',BRA:'🇧🇷',MLT:'🇲🇹',NED:'🇳🇱',JPN:'🇯🇵',KOR:'🇰🇷'};
+
+// ====== EXPANDED PLAYERS (Top 36) ======
+const SP={
+  snooker:[
+    // Top 16
+    {id:'s1',n:'Judd Trump',z:'贾德·特鲁姆普',na:'ENG',f:FL.ENG,rk:1,pt:1655550,ch:0,tp:2005,hr:1,slug:'trump'},
+    {id:'s2',n:'Neil Robertson',z:'尼尔·罗伯逊',na:'AUS',f:FL.AUS,rk:2,pt:1210550,ch:3,tp:1998,hr:1,slug:'robertson'},
+    {id:'s3',n:'Zhao Xintong',z:'赵心童',na:'CHN',f:FL.CHN,rk:3,pt:1176550,ch:0,tp:2016,hr:3,slug:'zhao'},
+    {id:'s4',n:'Wu Yize',z:'吴宜泽',na:'CHN',f:FL.CHN,rk:4,pt:1120900,ch:5,tp:2019,hr:4,slug:'wu'},
+    {id:'s5',n:'John Higgins',z:'约翰·希金斯',na:'SCO',f:FL.SCO,rk:5,pt:958350,ch:0,tp:1992,hr:1,slug:'higgins'},
+    {id:'s6',n:'Shaun Murphy',z:'肖恩·墨菲',na:'ENG',f:FL.ENG,rk:6,pt:956800,ch:0,tp:1997,hr:3,slug:'murphy'},
+    {id:'s7',n:'Mark Williams',z:'马克·威廉姆斯',na:'WAL',f:FL.WAL,rk:7,pt:903400,ch:0,tp:1992,hr:1,slug:'williams'},
+    {id:'s8',n:'Kyren Wilson',z:'凯伦·威尔逊',na:'ENG',f:FL.ENG,rk:8,pt:897100,ch:-6,tp:2010,hr:2,slug:'wilson'},
+    {id:'s9',n:'Mark Selby',z:'马克·塞尔比',na:'ENG',f:FL.ENG,rk:9,pt:849350,ch:0,tp:1999,hr:1,slug:'selby'},
+    {id:'s10',n:'Barry Hawkins',z:'巴里·霍金斯',na:'ENG',f:FL.ENG,rk:10,pt:685350,ch:0,tp:1996,hr:4,slug:'hawkins'},
+    {id:'s11',n:'Xiao Guodong',z:'肖国栋',na:'CHN',f:FL.CHN,rk:11,pt:658900,ch:0,tp:2007,hr:11,slug:'xiao'},
+    {id:'s12',n:'Mark Allen',z:'马克·艾伦',na:'NIR',f:FL.NIR,rk:12,pt:587750,ch:0,tp:2005,hr:1,slug:'allen'},
+    {id:'s13',n:'Chris Wakelin',z:'克里斯·韦克林',na:'ENG',f:FL.ENG,rk:13,pt:584200,ch:0,tp:2013,hr:13,slug:'wakelin'},
+    {id:'s14',n:"Ronnie O'Sullivan",z:'罗尼·奥沙利文',na:'ENG',f:FL.ENG,rk:14,pt:551250,ch:-9,tp:1992,hr:1,slug:'osullivan'},
+    {id:'s15',n:'Ding Junhui',z:'丁俊晖',na:'CHN',f:FL.CHN,rk:15,pt:464850,ch:0,tp:2003,hr:1,slug:'ding'},
+    {id:'s16',n:'Si Jiahui',z:'斯佳辉',na:'CHN',f:FL.CHN,rk:16,pt:439400,ch:0,tp:2019,hr:16,slug:'si'},
+    // 17-36 (外卡 + 名将)
+    {id:'s17',n:'Jack Lisowski',z:'杰克·利索夫斯基',na:'ENG',f:FL.ENG,rk:17,pt:420000,ch:0,tp:2010,hr:10,slug:'lisowski'},
+    {id:'s18',n:'Luca Brecel',z:'卢卡·布雷塞尔',na:'BEL',f:FL.BEL,rk:18,pt:395000,ch:-2,tp:2011,hr:2,slug:'brecel'},
+    {id:'s19',n:'Ali Carter',z:'阿里·卡特',na:'ENG',f:FL.ENG,rk:19,pt:380000,ch:0,tp:1996,hr:2,slug:'carter'},
+    {id:'s20',n:'Hossein Vafaei',z:'侯赛因·瓦菲',na:'IRI',f:FL.IRI,rk:20,pt:360000,ch:3,tp:2012,hr:16,slug:'vafaei'},
+    {id:'s21',n:'Zhang Anda',z:'张安达',na:'CHN',f:FL.CHN,rk:21,pt:340000,ch:1,tp:2009,hr:12,slug:'zhang'},
+    {id:'s22',n:'Tom Ford',z:'汤姆·福德',na:'ENG',f:FL.ENG,rk:22,pt:320000,ch:-2,tp:2001,hr:16,slug:'ford'},
+    {id:'s23',n:'Gary Wilson',z:'加里·威尔逊',na:'ENG',f:FL.ENG,rk:23,pt:305000,ch:0,tp:2004,hr:12,slug:'gwilson'},
+    {id:'s24',n:'Ryan Day',z:'瑞恩·戴',na:'WAL',f:FL.WAL,rk:24,pt:290000,ch:0,tp:1998,hr:6,slug:'day'},
+    {id:'s25',n:'Noppon Saengkham',z:'诺鹏·桑坎姆',na:'THA',f:FL.THA,rk:25,pt:275000,ch:-3,tp:2010,hr:15,slug:'saengkham'},
+    {id:'s26',n:'Pang Junxu',z:'庞俊旭',na:'CHN',f:FL.CHN,rk:26,pt:260000,ch:2,tp:2019,hr:22,slug:'pang'},
+    {id:'s27',n:'Zhou Yuelong',z:'周跃龙',na:'CHN',f:FL.CHN,rk:27,pt:248000,ch:-1,tp:2014,hr:17,slug:'zhou'},
+    {id:'s28',n:'David Gilbert',z:'大卫·吉尔伯特',na:'ENG',f:FL.ENG,rk:28,pt:235000,ch:0,tp:2002,hr:10,slug:'gilbert'},
+    {id:'s29',n:'Stuart Bingham',z:'斯图亚特·宾汉姆',na:'ENG',f:FL.ENG,rk:29,pt:220000,ch:-4,tp:1995,hr:2,slug:'bingham'},
+    {id:'s30',n:'Fan Zhengyi',z:'范争一',na:'CHN',f:FL.CHN,rk:30,pt:210000,ch:3,tp:2018,hr:18,slug:'fan'},
+    {id:'s31',n:'Thepchaiya Un-Nooh',z:'塔猜亚·乌努',na:'THA',f:FL.THA,rk:31,pt:198000,ch:0,tp:2009,hr:15,slug:'unnooh'},
+    {id:'s32',n:'Stephen Maguire',z:'斯蒂芬·马奎尔',na:'SCO',f:FL.SCO,rk:32,pt:185000,ch:-5,tp:1998,hr:2,slug:'maguire'},
+    {id:'s33',n:'Lyu Haotian',z:'吕昊天',na:'CHN',f:FL.CHN,rk:33,pt:172000,ch:1,tp:2013,hr:24,slug:'lyu'},
+    {id:'s34',n:'Yuan Sijun',z:'袁思俊',na:'CHN',f:FL.CHN,rk:34,pt:160000,ch:2,tp:2017,hr:25,slug:'yuan'},
+    {id:'s35',n:'Xu Si',z:'徐思',na:'CHN',f:FL.CHN,rk:35,pt:148000,ch:0,tp:2016,hr:28,slug:'xu'},
+    {id:'s36',n:'Anthony McGill',z:'安东尼·麦吉尔',na:'SCO',f:FL.SCO,rk:36,pt:138000,ch:-3,tp:2010,hr:12,slug:'mcgill'},
+  ],
+  chinese8:[
+    {id:'c1',n:'楚秉杰',z:'楚秉杰',na:'CHN',f:FL.CHN,rk:1,pt:17538,ch:0,tp:2012,hr:1,slug:null},
+    {id:'c2',n:'唐春晓',z:'唐春晓',na:'CHN',f:FL.CHN,rk:2,pt:16085,ch:1,tp:2015,hr:1,slug:null},
+    {id:'c3',n:'沈申义',z:'沈申义',na:'CHN',f:FL.CHN,rk:3,pt:14620,ch:-1,tp:2018,hr:2,slug:null},
+    {id:'c4',n:'孔德京',z:'孔德京',na:'CHN',f:FL.CHN,rk:4,pt:13202,ch:2,tp:2016,hr:3,slug:null},
+    {id:'c5',n:'郑宇伯',z:'郑宇伯',na:'CHN',f:FL.CHN,rk:5,pt:11648,ch:-1,tp:2010,hr:1,slug:null},
+    {id:'c6',n:'赵汝亮',z:'赵汝亮',na:'CHN',f:FL.CHN,rk:6,pt:11122,ch:0,tp:2016,hr:3,slug:null},
+    {id:'c7',n:'王云',z:'王云',na:'CHN',f:FL.CHN,rk:7,pt:9000,ch:3,tp:2013,hr:5,slug:null},
+    {id:'c8',n:'雷镒玮',z:'雷镒玮',na:'CHN',f:FL.CHN,rk:8,pt:9234,ch:0,tp:2018,hr:7,slug:null},
+    {id:'c9',n:'石汉青',z:'石汉青',na:'CHN',f:FL.CHN,rk:9,pt:7573,ch:-2,tp:2009,hr:1,slug:null},
+    {id:'c10',n:'牛壮',z:'牛壮',na:'CHN',f:FL.CHN,rk:10,pt:7400,ch:5,tp:2017,hr:5,slug:null},
+    {id:'c11',n:'张泰艺',z:'张泰艺',na:'CHN',f:FL.CHN,rk:11,pt:7100,ch:-1,tp:2019,hr:2,slug:null},
+    {id:'c12',n:'曹宇鹏',z:'曹宇鹏',na:'CHN',f:FL.CHN,rk:12,pt:6890,ch:0,tp:2013,hr:5,slug:null},
+    {id:'c13',n:'陈思明',z:'陈思明',na:'CHN',f:FL.CHN,rk:13,pt:6500,ch:2,tp:2011,hr:3,slug:null},
+    {id:'c14',n:'杨帆',z:'杨帆',na:'CHN',f:FL.CHN,rk:14,pt:6300,ch:0,tp:2009,hr:1,slug:null},
+    {id:'c15',n:'薄俊杰',z:'薄俊杰',na:'CHN',f:FL.CHN,rk:15,pt:6100,ch:-3,tp:2018,hr:8,slug:null},
+    {id:'c16',n:'张鹏',z:'张鹏',na:'CHN',f:FL.CHN,rk:16,pt:5800,ch:0,tp:2014,hr:5,slug:null},
+  ],
+  nineball:[
+    {id:'n1',n:'Francisco Sanchez Ruiz',z:'弗朗西斯科·桑切斯',na:'ESP',f:FL.ESP,rk:1,pt:28500,ch:0,tp:2015,hr:1,slug:null},
+    {id:'n2',n:'Joshua Filler',z:'约书亚·菲勒',na:'GER',f:FL.GER,rk:2,pt:26100,ch:0,tp:2016,hr:1,slug:null},
+    {id:'n3',n:'Fedor Gorst',z:'菲多尔·戈斯特',na:'USA',f:FL.USA,rk:3,pt:24800,ch:1,tp:2017,hr:1,slug:null},
+    {id:'n4',n:'Jayson Shaw',z:'杰森·肖',na:'SCO',f:FL.SCO,rk:4,pt:22100,ch:-1,tp:2010,hr:2,slug:null},
+    {id:'n5',n:'Albin Ouschan',z:'阿尔宾·欧斯纯',na:'AUT',f:FL.AUT,rk:5,pt:19500,ch:2,tp:2008,hr:1,slug:null},
+    {id:'n6',n:'Ko Ping Chung',z:'柯秉中',na:'TPE',f:FL.TPE,rk:6,pt:18200,ch:0,tp:2014,hr:3,slug:null},
+    {id:'n7',n:'Shane Van Boening',z:'肖恩·范伯宁',na:'USA',f:FL.USA,rk:7,pt:16800,ch:-2,tp:2005,hr:1,slug:null},
+    {id:'n8',n:'Carlo Biado',z:'卡洛·比亚多',na:'PHI',f:FL.PHI,rk:8,pt:15100,ch:3,tp:2009,hr:1,slug:null},
+    {id:'n9',n:'Eklent Kaçi',z:'艾克伦特·卡奇',na:'ALB',f:'🇦🇱',rk:9,pt:14800,ch:0,tp:2018,hr:5,slug:null},
+    {id:'n10',n:'David Alcaide',z:'大卫·阿尔凯德',na:'ESP',f:FL.ESP,rk:10,pt:13200,ch:-2,tp:2006,hr:3,slug:null},
+    {id:'n11',n:'Ko Pin Yi',z:'柯秉逸',na:'TPE',f:FL.TPE,rk:11,pt:12500,ch:4,tp:2007,hr:1,slug:null},
+    {id:'n12',n:'Wiktor Zielinski',z:'维克托·泽林斯基',na:'POL',f:FL.POL,rk:12,pt:11800,ch:-1,tp:2019,hr:8,slug:null},
+  ]
+};
+
+// ====== TOURNAMENTS ======
+const TS={
+  snooker:{
+    '2024/25':[
+      {id:'wsc25',n:'斯诺克世界锦标赛',c:'triple-crown',s:'2025-04-19',e:'2025-05-05',ci:'谢菲尔德',co:'英格兰',v:'Crucible Theatre',p:'£2,395,000',st:'completed',ch:'Kyren Wilson'},
+      {id:'uk24',n:'英锦赛',c:'triple-crown',s:'2024-11-23',e:'2024-12-01',ci:'约克',co:'英格兰',v:'Barbican Centre',p:'£1,205,000',st:'completed',ch:'Judd Trump'},
+      {id:'masters25',n:'大师赛',c:'triple-crown',s:'2025-01-12',e:'2025-01-19',ci:'伦敦',co:'英格兰',v:'Alexandra Palace',p:'£1,015,000',st:'completed',ch:'Shaun Murphy'},
+      {id:'saudi24',n:'沙特大师赛',c:'ranking',s:'2024-08-30',e:'2024-09-07',ci:'利雅得',co:'沙特',v:'Green Halls',p:'£2,302,000',st:'completed',ch:'Judd Trump'},
+      {id:'wuhan24',n:'武汉公开赛',c:'ranking',s:'2024-10-06',e:'2024-10-12',ci:'武汉',co:'中国',v:'武汉体育馆',p:'£700,000',st:'completed',ch:'肖国栋'},
+      {id:'intl24',n:'国际锦标赛',c:'ranking',s:'2024-11-03',e:'2024-11-10',ci:'南京',co:'中国',v:'南京奥体中心',p:'£825,000',st:'completed',ch:'张安达'},
+      {id:'english24',n:'英格兰公开赛',c:'ranking',s:'2024-09-12',e:'2024-09-22',ci:'布伦特伍德',co:'英格兰',v:'Brentwood Centre',p:'£550,000',st:'completed',ch:'Mark Selby'},
+      {id:'german25',n:'德国大师赛',c:'ranking',s:'2025-01-27',e:'2025-02-02',ci:'柏林',co:'德国',v:'Tempodrom',p:'£427,000',st:'completed',ch:'Judd Trump'},
+    ],
+    '2025/26':[
+      {id:'wsc26',n:'斯诺克世界锦标赛',c:'triple-crown',s:'2026-04-18',e:'2026-05-04',ci:'谢菲尔德',co:'英格兰',v:'Crucible Theatre',p:'£2,395,000',st:'completed',ch:'Judd Trump'},
+      {id:'uk25',n:'英锦赛',c:'triple-crown',s:'2025-11-29',e:'2025-12-07',ci:'约克',co:'英格兰',v:'Barbican Centre',p:'£1,173,000',st:'completed',ch:'Judd Trump'},
+      {id:'masters26',n:'大师赛',c:'triple-crown',s:'2026-01-11',e:'2026-01-18',ci:'伦敦',co:'英格兰',v:'Alexandra Palace',p:'£750,000',st:'completed',ch:'Shaun Murphy'},
+      {id:'saudi25',n:'沙特大师赛',c:'ranking',s:'2025-08-08',e:'2025-08-16',ci:'吉达',co:'沙特',v:'King Abdullah Sports City',p:'£2,300,000',st:'completed',ch:'Judd Trump'},
+      {id:'wuhan25',n:'武汉公开赛',c:'ranking',s:'2025-08-24',e:'2025-08-30',ci:'武汉',co:'中国',v:'武汉体育馆',p:'£700,000',st:'completed',ch:'肖国栋'},
+      {id:'english25b',n:'英格兰公开赛',c:'ranking',s:'2025-09-11',e:'2025-09-21',ci:'布伦特伍德',co:'英格兰',v:'Brentwood Centre',p:'£550,000',st:'completed',ch:'Judd Trump'},
+      {id:'german26',n:'德国大师赛',c:'ranking',s:'2026-01-26',e:'2026-02-01',ci:'柏林',co:'德国',v:'Tempodrom',p:'£427,000',st:'completed',ch:'Judd Trump'},
+      {id:'wgp26',n:'世界大奖赛',c:'ranking',s:'2026-02-03',e:'2026-02-08',ci:'香港',co:'中国',v:'香港体育馆',p:'£380,000',st:'completed',ch:'Neil Robertson'},
+    ],
+    '2026/27':[
+      {id:'shanghai26',n:'上海大师赛',c:'invitational',s:'2026-07-28',e:'2026-08-03',ci:'上海',co:'中国',v:'上海体育馆',p:'£825,000',st:'live',ch:'Judd Trump',matchTime:'19:30'},
+      {id:'saudi26',n:'沙特大师赛',c:'ranking',s:'2026-08-08',e:'2026-08-16',ci:'吉达',co:'沙特',v:'King Abdullah Sports City',p:'£2,300,000',st:'upcoming',ch:'Judd Trump',matchTime:'17:00'},
+      {id:'wuhan26',n:'武汉公开赛',c:'ranking',s:'2026-08-24',e:'2026-08-30',ci:'武汉',co:'中国',v:'武汉体育馆',p:'£700,000',st:'upcoming',ch:'肖国栋',matchTime:'10:00'},
+      {id:'english26',n:'英格兰公开赛',c:'ranking',s:'2026-09-14',e:'2026-09-20',ci:'布伦特伍德',co:'英格兰',v:'Brentwood Centre',p:'£550,000',st:'upcoming',ch:null,matchTime:'13:00'},
+      {id:'british26',n:'英国公开赛',c:'ranking',s:'2026-09-22',e:'2026-09-28',ci:'切尔滕纳姆',co:'英格兰',v:'Cheltenham',p:'£500,000',st:'upcoming',ch:null,matchTime:'13:00'},
+      {id:'xian26',n:'西安大奖赛',c:'ranking',s:'2026-10-07',e:'2026-10-13',ci:'西安',co:'中国',v:'西安奥体中心',p:'£800,000',st:'upcoming',ch:null,matchTime:'10:00'},
+      {id:'ni26',n:'北爱尔兰公开赛',c:'ranking',s:'2026-10-19',e:'2026-10-26',ci:'贝尔法斯特',co:'北爱尔兰',v:'Waterfront Hall',p:'£550,000',st:'upcoming',ch:null,matchTime:'13:00'},
+      {id:'intl26',n:'国际锦标赛',c:'ranking',s:'2026-11-02',e:'2026-11-09',ci:'天津',co:'中国',v:'天津体育馆',p:'£825,000',st:'upcoming',ch:null,matchTime:'10:00'},
+      {id:'uk26',n:'英锦赛',c:'triple-crown',s:'2026-11-28',e:'2026-12-06',ci:'约克',co:'英格兰',v:'Barbican Centre',p:'£1,200,000',st:'upcoming',ch:null,matchTime:'13:00'},
+      {id:'masters27',n:'大师赛',c:'triple-crown',s:'2027-01-10',e:'2027-01-17',ci:'伦敦',co:'英格兰',v:'Alexandra Palace',p:'£750,000',st:'upcoming',ch:null,matchTime:'13:00'},
+      {id:'german27',n:'德国大师赛',c:'ranking',s:'2027-01-25',e:'2027-01-31',ci:'柏林',co:'德国',v:'Tempodrom',p:'£450,000',st:'upcoming',ch:null,matchTime:'14:00'},
+      {id:'wsc27',n:'斯诺克世界锦标赛',c:'triple-crown',s:'2027-04-17',e:'2027-05-03',ci:'谢菲尔德',co:'英格兰',v:'Crucible Theatre',p:'£2,500,000',st:'upcoming',ch:null,matchTime:'10:00'},
+    ]
+  },
+  chinese8:[
+    {id:'ctja',n:'甲级分站赛（天津站）',c:'major',s:'2025-03-17',e:'2025-03-29',ci:'天津',co:'中国',v:'天津体育馆',p:'¥200万',st:'completed',ch:'牛壮'},
+    {id:'ctjs',n:'超级分站赛（天津站）',c:'major',s:'2025-03-30',e:'2025-04-09',ci:'天津',co:'中国',v:'天津体育馆',p:'¥400万',st:'completed',ch:'唐春晓'},
+    {id:'cf13',n:'第十三届全球总决赛',c:'triple-crown',s:'2025-04-26',e:'2025-05-17',ci:'成都',co:'中国',v:'双流体育中心',p:'¥1,000万',st:'completed',ch:'牛壮'},
+    {id:'cbtj',n:'甲级分站赛（包头站）',c:'major',s:'2025-06-25',e:'2025-07-05',ci:'包头',co:'中国',v:'包头体育馆',p:'¥200万',st:'completed',ch:'王云'},
+    {id:'cbts',n:'超级分站赛（包头站）',c:'major',s:'2025-07-06',e:'2025-07-16',ci:'包头',co:'中国',v:'包头体育馆',p:'¥400万',st:'completed',ch:'楚秉杰'},
+    {id:'czja',n:'甲级分站赛（芷江站）',c:'major',s:'2025-09-07',e:'2025-09-17',ci:'芷江',co:'中国',v:'芷江体育馆',p:'¥200万',st:'completed',ch:'赵剑波'},
+    {id:'czjs',n:'超级分站赛（芷江站）',c:'major',s:'2025-09-18',e:'2025-09-27',ci:'芷江',co:'中国',v:'芷江体育馆',p:'¥400万',st:'completed',ch:'赵汝亮'},
+    {id:'cnna',n:'甲级分站赛（南宁站）',c:'major',s:'2025-12-04',e:'2025-12-24',ci:'南宁',co:'中国',v:'南宁体育馆',p:'¥200万',st:'upcoming',ch:null},
+    {id:'cnns',n:'超级分站赛（南宁站）',c:'major',s:'2025-12-25',e:'2026-01-04',ci:'南宁',co:'中国',v:'南宁体育馆',p:'¥400万',st:'upcoming',ch:null},
+    {id:'cf14',n:'第十四届全球总决赛',c:'triple-crown',s:'2026-03-13',e:'2026-04-02',ci:'待定',co:'中国',v:'待定',p:'¥1,000万',st:'upcoming',ch:null},
+  ],
+  nineball:[
+    {id:'nwpc',n:'世界九球锦标赛',c:'triple-crown',s:'2025-07-21',e:'2025-07-26',ci:'吉达',co:'沙特',v:'King Abdullah Sports City',p:'$250,000',st:'completed',ch:'Joshua Filler'},
+    {id:'nuso',n:'美国公开赛',c:'major',s:'2025-08-18',e:'2025-08-23',ci:'大西洋城',co:'美国',v:"Harrah's Resort",p:'$500,000',st:'completed',ch:'Fedor Gorst'},
+    {id:'nhn',n:'河内公开赛',c:'major',s:'2025-10-07',e:'2025-10-12',ci:'河内',co:'越南',v:'My Dinh Indoor Stadium',p:'$200,000',st:'completed',ch:'Ko Pin Yi'},
+    {id:'nflo',n:'佛罗里达公开赛',c:'ranking',s:'2025-08-05',e:'2025-08-10',ci:'奥兰多',co:'美国',v:'Caribe Royale',p:'$200,000',st:'completed',ch:'Jayson Shaw'},
+    {id:'nhn2',n:'河内公开赛',c:'major',s:'2026-10-06',e:'2026-10-11',ci:'河内',co:'越南',v:'My Dinh Indoor Stadium',p:'$200,000',st:'upcoming',ch:null},
+  ]
+};
+
+// ====== BRACKETS ======
+const BRACKETS={
+  shanghai26:{rounds:[
+    {name:'决赛',nameZh:'决赛',bestOf:21,matches:[{p1:'s3',p2:'s1',s1:null,s2:null,status:'upcoming',time:'8月3日 19:30'}]},
+    {name:'半决赛',nameZh:'半决赛',bestOf:19,matches:[{p1:'s3',p2:'s5',s1:10,s2:7,status:'completed',time:'8月2日'},{p1:'s1',p2:'s6',s1:10,s2:6,status:'completed',time:'8月2日'}]},
+    {name:'1/4决赛',nameZh:'1/4决赛',bestOf:11,matches:[{p1:'s3',p2:'s7',s1:6,s2:3,status:'completed',time:'8月1日'},{p1:'s5',p2:'s12',s1:6,s2:4,status:'completed',time:'8月1日'},{p1:'s1',p2:'s9',s1:6,s2:2,status:'completed',time:'7月31日'},{p1:'s6',p2:'s8',s1:6,s2:5,status:'completed',time:'7月31日'}]},
+    {name:'16强',nameZh:'16强',bestOf:11,matches:[{p1:'s3',p2:'s15',s1:6,s2:4,status:'completed',time:'7月30日'},{p1:'s7',p2:'s10',s1:6,s2:3,status:'completed',time:'7月30日'},{p1:'s5',p2:'s4',s1:6,s2:5,status:'completed',time:'7月30日'},{p1:'s12',p2:'s13',s1:6,s2:2,status:'completed',time:'7月30日'},{p1:'s1',p2:'s16',s1:6,s2:1,status:'completed',time:'7月29日'},{p1:'s9',p2:'s11',s1:6,s2:4,status:'completed',time:'7月29日'},{p1:'s6',p2:'s14',s1:6,s2:3,status:'completed',time:'7月29日'},{p1:'s8',p2:'s2',s1:6,s2:5,status:'completed',time:'7月29日'}]}
+  ]},
+  wsc26:{rounds:[
+    {name:'决赛',nameZh:'决赛',bestOf:35,matches:[{p1:'s1',p2:'s3',s1:18,s2:15,status:'completed',time:'5月3-4日'}]},
+    {name:'半决赛',nameZh:'半决赛',bestOf:33,matches:[{p1:'s3',p2:'s2',s1:17,s2:12,status:'completed',time:'5月1-2日'},{p1:'s1',p2:'s8',s1:17,s2:10,status:'completed',time:'4月30日-5月1日'}]},
+    {name:'1/4决赛',nameZh:'1/4决赛',bestOf:25,matches:[{p1:'s2',p2:'s6',s1:13,s2:9,status:'completed'},{p1:'s3',p2:'s5',s1:13,s2:7,status:'completed'},{p1:'s1',p2:'s7',s1:13,s2:5,status:'completed'},{p1:'s8',p2:'s9',s1:13,s2:11,status:'completed'}]},
+    {name:'16强',nameZh:'16强',bestOf:25,matches:[{p1:'s2',p2:'s10',s1:13,s2:8,status:'completed'},{p1:'s6',p2:'s12',s1:13,s2:6,status:'completed'},{p1:'s3',p2:'s14',s1:13,s2:10,status:'completed'},{p1:'s5',p2:'s19',s1:13,s2:4,status:'completed'},{p1:'s1',p2:'s17',s1:13,s2:3,status:'completed'},{p1:'s7',p2:'s4',s1:13,s2:11,status:'completed'},{p1:'s9',p2:'s18',s1:13,s2:7,status:'completed'},{p1:'s8',p2:'s15',s1:13,s2:9,status:'completed'}]}
+  ]},
+  uk25:{rounds:[
+    {name:'决赛',nameZh:'决赛',bestOf:19,matches:[{p1:'s1',p2:'s6',s1:10,s2:8,status:'completed',time:'12月7日'}]},
+    {name:'半决赛',nameZh:'半决赛',bestOf:11,matches:[{p1:'s1',p2:'s8',s1:6,s2:3,status:'completed'},{p1:'s6',p2:'s9',s1:6,s2:4,status:'completed'}]},
+    {name:'1/4决赛',nameZh:'1/4决赛',bestOf:11,matches:[{p1:'s1',p2:'s2',s1:6,s2:4,status:'completed'},{p1:'s8',p2:'s12',s1:6,s2:2,status:'completed'},{p1:'s6',p2:'s5',s1:6,s2:5,status:'completed'},{p1:'s9',p2:'s7',s1:6,s2:3,status:'completed'}]},
+    {name:'16强',nameZh:'16强',bestOf:11,matches:[{p1:'s1',p2:'s15',s1:6,s2:3,status:'completed'},{p1:'s2',p2:'s10',s1:6,s2:4,status:'completed'},{p1:'s8',p2:'s14',s1:6,s2:5,status:'completed'},{p1:'s12',p2:'s16',s1:6,s2:1,status:'completed'},{p1:'s6',p2:'s4',s1:6,s2:4,status:'completed'},{p1:'s5',p2:'s11',s1:6,s2:2,status:'completed'},{p1:'s9',p2:'s3',s1:6,s2:5,status:'completed'},{p1:'s7',p2:'s19',s1:6,s2:3,status:'completed'}]}
+  ]},
+  masters26:{rounds:[
+    {name:'决赛',nameZh:'决赛',bestOf:19,matches:[{p1:'s6',p2:'s8',s1:10,s2:7,status:'completed',time:'1月18日'}]},
+    {name:'半决赛',nameZh:'半决赛',bestOf:11,matches:[{p1:'s6',p2:'s1',s1:6,s2:4,status:'completed'},{p1:'s8',p2:'s2',s1:6,s2:5,status:'completed'}]},
+    {name:'1/4决赛',nameZh:'1/4决赛',bestOf:11,matches:[{p1:'s1',p2:'s9',s1:6,s2:3,status:'completed'},{p1:'s6',p2:'s5',s1:6,s2:4,status:'completed'},{p1:'s8',p2:'s12',s1:6,s2:2,status:'completed'},{p1:'s2',p2:'s7',s1:6,s2:5,status:'completed'}]},
+    {name:'16强',nameZh:'16强',bestOf:11,matches:[{p1:'s1',p2:'s14',s1:6,s2:3,status:'completed'},{p1:'s9',p2:'s10',s1:6,s2:4,status:'completed'},{p1:'s6',p2:'s3',s1:6,s2:5,status:'completed'},{p1:'s5',p2:'s4',s1:6,s2:2,status:'completed'},{p1:'s8',p2:'s15',s1:6,s2:4,status:'completed'},{p1:'s12',p2:'s16',s1:6,s2:1,status:'completed'},{p1:'s2',p2:'s19',s1:6,s2:3,status:'completed'},{p1:'s7',p2:'s11',s1:6,s2:4,status:'completed'}]}
+  ]},
+  german26:{rounds:[
+    {name:'决赛',nameZh:'决赛',bestOf:19,matches:[{p1:'s1',p2:'s8',s1:10,s2:6,status:'completed',time:'2月1日'}]},
+    {name:'半决赛',nameZh:'半决赛',bestOf:11,matches:[{p1:'s1',p2:'s3',s1:6,s2:5,status:'completed'},{p1:'s8',p2:'s4',s1:6,s2:3,status:'completed'}]},
+    {name:'1/4决赛',nameZh:'1/4决赛',bestOf:9,matches:[{p1:'s1',p2:'s9',s1:5,s2:2,status:'completed'},{p1:'s3',p2:'s6',s1:5,s2:3,status:'completed'},{p1:'s8',p2:'s2',s1:5,s2:4,status:'completed'},{p1:'s4',p2:'s12',s1:5,s2:1,status:'completed'}]},
+    {name:'16强',nameZh:'16强',bestOf:9,matches:[{p1:'s1',p2:'s22',s1:5,s2:1,status:'completed'},{p1:'s9',p2:'s10',s1:5,s2:3,status:'completed'},{p1:'s3',p2:'s16',s1:5,s2:2,status:'completed'},{p1:'s6',p2:'s7',s1:5,s2:4,status:'completed'},{p1:'s8',p2:'s24',s1:5,s2:4,status:'completed'},{p1:'s2',p2:'s14',s1:5,s2:3,status:'completed'},{p1:'s4',p2:'s17',s1:5,s2:1,status:'completed'},{p1:'s12',p2:'s13',s1:5,s2:2,status:'completed'}]}
+  ]},
+  saudi25:{rounds:[
+    {name:'决赛',nameZh:'决赛',bestOf:19,matches:[{p1:'s1',p2:'s2',s1:10,s2:7,status:'completed',time:'8月16日'}]},
+    {name:'半决赛',nameZh:'半决赛',bestOf:11,matches:[{p1:'s1',p2:'s6',s1:6,s2:3,status:'completed'},{p1:'s2',p2:'s8',s1:6,s2:4,status:'completed'}]},
+    {name:'1/4决赛',nameZh:'1/4决赛',bestOf:11,matches:[{p1:'s1',p2:'s9',s1:6,s2:2,status:'completed'},{p1:'s6',p2:'s3',s1:6,s2:5,status:'completed'},{p1:'s8',p2:'s7',s1:6,s2:3,status:'completed'},{p1:'s2',p2:'s12',s1:6,s2:4,status:'completed'}]},
+    {name:'16强',nameZh:'16强',bestOf:11,matches:[{p1:'s1',p2:'s21',s1:6,s2:2,status:'completed'},{p1:'s9',p2:'s4',s1:6,s2:5,status:'completed'},{p1:'s6',p2:'s14',s1:6,s2:3,status:'completed'},{p1:'s3',p2:'s10',s1:6,s2:4,status:'completed'},{p1:'s8',p2:'s11',s1:6,s2:4,status:'completed'},{p1:'s7',p2:'s16',s1:6,s2:1,status:'completed'},{p1:'s2',p2:'s17',s1:6,s2:2,status:'completed'},{p1:'s12',p2:'s5',s1:6,s2:4,status:'completed'}]}
+  ]},
+  wgp26:{rounds:[
+    {name:'决赛',nameZh:'决赛',bestOf:19,matches:[{p1:'s2',p2:'s1',s1:10,s2:8,status:'completed',time:'2月8日'}]},
+    {name:'半决赛',nameZh:'半决赛',bestOf:11,matches:[{p1:'s1',p2:'s3',s1:6,s2:4,status:'completed'},{p1:'s2',p2:'s8',s1:6,s2:3,status:'completed'}]},
+    {name:'1/4决赛',nameZh:'1/4决赛',bestOf:9,matches:[{p1:'s1',p2:'s6',s1:5,s2:2,status:'completed'},{p1:'s3',p2:'s9',s1:5,s2:3,status:'completed'},{p1:'s8',p2:'s5',s1:5,s2:4,status:'completed'},{p1:'s2',p2:'s4',s1:5,s2:3,status:'completed'}]},
+    {name:'16强',nameZh:'16强',bestOf:7,matches:[{p1:'s1',p2:'s17',s1:4,s2:1,status:'completed'},{p1:'s6',p2:'s10',s1:4,s2:3,status:'completed'},{p1:'s3',p2:'s12',s1:4,s2:2,status:'completed'},{p1:'s9',p2:'s7',s1:4,s2:3,status:'completed'},{p1:'s8',p2:'s13',s1:4,s2:2,status:'completed'},{p1:'s5',p2:'s14',s1:4,s2:1,status:'completed'},{p1:'s2',p2:'s21',s1:4,s2:3,status:'completed'},{p1:'s4',p2:'s11',s1:4,s2:1,status:'completed'}]}
+  ]}
+};
+
+// ====== BROADCASTS ======
+const BROADCASTS={
+  shanghai26:[
+    {platform:'虎牙直播',url:'https://www.huya.com/',free:true,quality:'1080P',note:'搜索"斯诺克"'},
+    {platform:'抖音',url:'https://www.douyin.com/',free:true,quality:'1080P',note:'搜索"上海大师赛"'},
+    {platform:'CCTV-5',url:'https://tv.cctv.com/live/cctv5/',free:true,quality:'4K',note:'电视+网络同步'},
+    {platform:'央视频',url:'https://www.yangshipin.cn/',free:true,quality:'1080P',note:'APP搜索"斯诺克"'},
+    {platform:'咪咕视频',url:'https://www.miguvideo.com/',free:false,quality:'4K',note:'体育会员'},
+    {platform:'Matchroom Live',url:'https://matchroom.live/',free:false,quality:'1080P',note:'国际信号'},
+  ],
+  default:[
+    {platform:'虎牙直播',url:'https://www.huya.com/',free:true,quality:'1080P',note:'搜索"斯诺克"'},
+    {platform:'抖音',url:'https://www.douyin.com/',free:true,quality:'1080P',note:'搜索赛事名称'},
+    {platform:'CCTV-5',url:'https://tv.cctv.com/live/cctv5/',free:true,quality:'4K',note:'重要场次'},
+    {platform:'央视频',url:'https://www.yangshipin.cn/',free:true,quality:'1080P',note:'APP内搜索'},
+    {platform:'咪咕视频',url:'https://www.miguvideo.com/',free:false,quality:'4K',note:'体育会员'},
+  ],
+  saudi26:[
+    {platform:'DAZN',url:'https://www.dazn.com/',free:false,quality:'1080P',note:'国际信号'},
+    {platform:'虎牙直播',url:'https://www.huya.com/',free:true,quality:'1080P',note:'转播'},
+    {platform:'Matchroom Live',url:'https://matchroom.live/',free:false,quality:'1080P',note:'官方信号'},
+  ],
+};
+
+// ====== ACHIEVEMENTS ======
+const ACHIEVEMENTS={
+  s1:[{y:'2019',t:'🏆 世锦赛冠军 (第1座)'},{y:'2022',t:'🏆 世锦赛冠军 (第2座)'},{y:'2023',t:'🏆 世锦赛冠军 (第3座)'},{y:'2024',t:'🏆 世锦赛冠军 (第4座)'},{y:'2011',t:'英锦赛冠军'},{y:'2025',t:'英锦赛冠军 (第2座)'},{y:'2019',t:'大师赛冠军'},{y:'2023',t:'大师赛冠军 (第2座)'}],
+  s2:[{y:'2010',t:'🏆 世锦赛冠军'},{y:'2013',t:'英锦赛冠军'},{y:'2015',t:'英锦赛冠军 (第2座)'},{y:'2020',t:'英锦赛冠军 (第3座)'},{y:'2012',t:'大师赛冠军'},{y:'2022',t:'大师赛冠军 (第2座)'}],
+  s3:[{y:'2021',t:'英锦赛冠军'},{y:'2022',t:'德国大师赛冠军'},{y:'2026',t:'🏆 世锦赛亚军'}],
+  s4:[{y:'2024',t:'英格兰公开赛冠军'},{y:'2026',t:'德国大师赛 147满分'}],
+  s5:[{y:'1998',t:'🏆 世锦赛冠军 (第1座)'},{y:'2007',t:'🏆 世锦赛冠军 (第2座)'},{y:'2009',t:'🏆 世锦赛冠军 (第3座)'},{y:'2011',t:'🏆 世锦赛冠军 (第4座)'},{y:'1998',t:'英锦赛冠军'},{y:'2000',t:'英锦赛冠军 (第2座)'},{y:'2010',t:'英锦赛冠军 (第3座)'},{y:'1999',t:'大师赛冠军'},{y:'2006',t:'大师赛冠军 (第2座)'}],
+  s6:[{y:'2005',t:'🏆 世锦赛冠军'},{y:'2008',t:'英锦赛冠军'},{y:'2015',t:'大师赛冠军'},{y:'2025',t:'大师赛冠军 (第2座)'}],
+  s7:[{y:'2000',t:'🏆 世锦赛冠军 (第1座)'},{y:'2003',t:'🏆 世锦赛冠军 (第2座)'},{y:'2018',t:'🏆 世锦赛冠军 (第3座)'},{y:'1999',t:'英锦赛冠军'},{y:'2002',t:'英锦赛冠军 (第2座)'},{y:'1998',t:'大师赛冠军'},{y:'2003',t:'大师赛冠军 (第2座)'}],
+  s8:[{y:'2024',t:'🏆 世锦赛冠军'},{y:'2020',t:'世锦赛亚军'},{y:'2022',t:'欧洲大师赛冠军'}],
+  s9:[{y:'2014',t:'🏆 世锦赛冠军 (第1座)'},{y:'2016',t:'🏆 世锦赛冠军 (第2座)'},{y:'2017',t:'🏆 世锦赛冠军 (第3座)'},{y:'2021',t:'🏆 世锦赛冠军 (第4座)'},{y:'2012',t:'英锦赛冠军'},{y:'2016',t:'英锦赛冠军 (第2座)'},{y:'2008',t:'大师赛冠军'},{y:'2010',t:'大师赛冠军 (第2座)'},{y:'2013',t:'大师赛冠军 (第3座)'}],
+  s14:[{y:'2001',t:'🏆 世锦赛冠军 (第1座)'},{y:'2004',t:'🏆 世锦赛冠军 (第2座)'},{y:'2008',t:'🏆 世锦赛冠军 (第3座)'},{y:'2012',t:'🏆 世锦赛冠军 (第4座)'},{y:'2013',t:'🏆 世锦赛冠军 (第5座)'},{y:'2020',t:'🏆 世锦赛冠军 (第6座)'},{y:'2022',t:'🏆 世锦赛冠军 (第7座)'},{y:'1993',t:'英锦赛冠军 (最年轻)'},{y:'1997',t:'英锦赛冠军'},{y:'2007',t:'英锦赛冠军'},{y:'2014',t:'英锦赛冠军'},{y:'2017',t:'英锦赛冠军'},{y:'2018',t:'英锦赛冠军'},{y:'2023',t:'英锦赛冠军 (第8座)'},{y:'1995',t:'大师赛冠军 (最年轻)'}],
+  s15:[{y:'2005',t:'英锦赛冠军 (第1座)'},{y:'2009',t:'英锦赛冠军 (第2座)'},{y:'2019',t:'英锦赛冠军 (第3座)'},{y:'2011',t:'大师赛冠军'},{y:'2014',t:'世界排名第一 (首位亚洲球员)'}],
+  s16:[{y:'2023',t:'🏆 世锦赛四强'},{y:'2024',t:'武汉公开赛亚军'}],
+  s19:[{y:'2018',t:'🏆 世锦赛亚军'},{y:'2012',t:'🏆 世锦赛亚军'},{y:'2020',t:'🏆 世锦赛亚军'}],
+  s29:[{y:'2015',t:'🏆 世锦赛冠军'},{y:'2020',t:'大师赛冠军'}],
+  s32:[{y:'2004',t:'英锦赛冠军'},{y:'2008',t:'中国公开赛冠军'}],
+};
+
+// ====== PLAYER-TOURNAMENT ASSOCIATIONS ======
+// Auto-derived from brackets + manual assignments for upcoming events
+const TOURNAMENT_PLAYERS={
+  // 2026/27 season
+  shanghai26:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16'],
+  saudi26:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s12','s14','s15','s16','s17','s18','s19','s20','s21','s22','s23','s24','s25','s26'],
+  wuhan26:['s3','s4','s11','s15','s16','s21','s26','s27','s30','s33','s34','s35','s1','s2','s5','s6','s8','s9','s10','s12'],
+  english26:['s1','s2','s5','s6','s7','s8','s9','s10','s12','s13','s14','s17','s18','s19','s22','s23','s24','s28','s29','s32','s36'],
+  british26:['s1','s2','s5','s6','s7','s8','s9','s10','s12','s14','s17','s18','s19','s22','s23','s28','s29','s32','s36'],
+  xian26:['s3','s4','s11','s15','s16','s21','s26','s27','s30','s33','s34','s35','s1','s2','s5','s6','s8','s9','s10'],
+  ni26:['s1','s2','s5','s6','s7','s8','s9','s12','s14','s17','s18','s19','s23','s28','s29','s36'],
+  intl26:['s3','s4','s11','s15','s16','s21','s26','s27','s30','s33','s34','s35','s1','s2','s5','s6','s8','s9','s10','s12','s14'],
+  uk26:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16','s17','s18','s19','s20','s21','s22','s23','s24'],
+  masters27:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s12','s14','s15','s16','s17','s18'],
+  german27:['s1','s2','s5','s6','s7','s8','s9','s10','s12','s14','s15','s17','s18','s19','s22','s23','s24','s28','s29','s32','s36'],
+  wsc27:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16','s17','s18','s19','s20','s21','s22','s23','s24'],
+  // 2025/26 (completed)
+  wsc26:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s12','s14','s15','s17','s18','s19'],
+  uk25:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s14','s15','s16','s19'],
+  masters26:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s14','s15','s16','s19'],
+  german26:['s1','s2','s3','s4','s6','s7','s8','s9','s10','s12','s13','s14','s16','s17','s22','s24'],
+  saudi25:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s14','s16','s17','s21'],
+  wgp26:['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s17','s21'],
+};
+
+// ====== STATE ======
+let curTab='schedule',curSport='snooker',curSeason='2026/27',favs=['s3','s15'];
+let mainPlayer=null;
+let proUser=JSON.parse(localStorage.getItem('cuemaster_pro')||'false');
+let apiOnline=false;
+let apiLastUpdate=null;
+let reminders=JSON.parse(localStorage.getItem('cuemaster_reminders')||'{}');
+const FREE_REMINDER_LIMIT=1;
+const SEASONS=['2026/27','2025/26','2024/25'];
+
+// ====== UTILS ======
+function fd(d){const dt=new Date(d);return(dt.getMonth()+1)+'月'+dt.getDate()+'日'}
+function gd(d){return Math.ceil((new Date(d)-new Date())/(86400000))}
+function fmtPts(pts,sp){if(sp==='snooker'){if(pts>=1e6)return'£'+(pts/1e6).toFixed(1)+'M';return'£'+(pts/1e3).toFixed(0)+'K'}if(sp==='chinese8')return pts.toLocaleString()+'分';return pts.toLocaleString()+'分'}
+
+// ====== AVATAR RENDERERS ======
+function avImgTag(urls,fid){if(!urls||!urls.length)return'';let h='';urls.forEach((u,i)=>{h+=`<img src="${u}" onerror="${i===urls.length-1?`this.style.display='none';document.getElementById('${fid}').style.display='flex'`:`this.style.display='none';this.nextElementSibling.style.display=''`}" style="${i>0?'display:none':''}" alt="">`});return h}
+function avHtml(p,size){size=size||34;const init=p.n.charAt(0);const colors=['#1B7A4A','#2563EB','#C41E3A','#D97706','#7C3AED','#059669','#DC2626','#0891B2','#4F46E5','#B45309'];const ci=p.id.charCodeAt(p.id.length-1)%colors.length;const bg=colors[ci];return`<div class="av2" style="width:${size}px;height:${size}px;background:${bg}22;display:flex;align-items:center;justify-content:center;position:relative"><div style="width:${size-4}px;height:${size-4}px;border-radius:50%;background:${bg};display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:${size*0.38}px">${init}</div><span class="flg2">${p.f}</span></div>`}
+function avHtmlSmall(p,size){size=size||18;const init=p.n.charAt(0);const colors=['#1B7A4A','#2563EB','#C41E3A','#D97706','#7C3AED','#059669','#DC2626','#0891B2'];const ci=p.id.charCodeAt(p.id.length-1)%colors.length;return`<div class="av2" style="width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center"><div style="width:${size-2}px;height:${size-2}px;border-radius:50%;background:${colors[ci]};display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:${size*0.48}px">${init}</div></div>`}
+function findPlayer(id){for(const sp of Object.values(SP)){const f=sp.find(x=>x.id===id);if(f)return f}return null}
+function findPlayersByIds(ids){return ids.map(id=>findPlayer(id)).filter(Boolean)}
+function getPlayerTournaments(pid){const res=[];Object.entries(TOURNAMENT_PLAYERS).forEach(([tid,pids])=>{if(pids.includes(pid))res.push(tid)});return res}
+function allTournaments(){const all=[];Object.entries(TS).forEach(([sp,tl])=>{if(Array.isArray(tl)){tl.forEach(t=>all.push({...t,sp}))}else{Object.entries(tl).forEach(([sn,tlist])=>{tlist.forEach(t=>all.push({...t,sp,season:sn}))})}});return all}
+
+// ====== PRO & REMINDER MANAGEMENT ======
+function isPro(){return proUser}
+function reminderCount(){return Object.keys(reminders).length}
+function canSetReminder(){return isPro()||reminderCount()<FREE_REMINDER_LIMIT}
+function togglePro(){proUser=!proUser;localStorage.setItem('cuemaster_pro',JSON.stringify(proUser));if(curTab==='profile')rProfile();if(curTab==='widgets')rWidgets();renderMPB()}
+
+function setReminder(tid,name,dateStr,matchTime){
+  if(reminders[tid]){delete reminders[tid];localStorage.setItem('cuemaster_reminders',JSON.stringify(reminders));showTD(tid);return}
+  if(!canSetReminder()){alert('🔒 免费用户仅可设置 '+FREE_REMINDER_LIMIT+' 个提醒。\n\n升级 CueMaster Pro 即可设置无限提醒、赛前多时间点推送。');return}
+  const tKey=matchTime?`${dateStr} ${matchTime}`:dateStr;
+  reminders[tid]={name,date:dateStr,matchTime:matchTime||null};localStorage.setItem('cuemaster_reminders',JSON.stringify(reminders));
+  if('Notification' in window&&Notification.permission==='default'){Notification.requestPermission()}
+  const timeInfo=matchTime?`\n开赛时间：${matchTime}`:'';
+  alert('✅ 已设置提醒！\n\n赛事：'+name+timeInfo+'\n日期：'+fd(dateStr)+'\n\n'+(isPro()?'Pro 用户：赛前30分钟 + 赛前1天双重推送':'免费用户：赛前1天推送')+'\n\n当前已用：'+reminderCount()+'/'+(isPro()?'∞':FREE_REMINDER_LIMIT));
+  showTD(tid);
+}
+
+// ====== API SERVICE ======
+const APIService={
+  baseURL:'https://api.allorigins.win/raw?url='+encodeURIComponent('http://api.snooker.org/'),
+  async fetch(endpoint,cacheKey,cacheDuration){
+    const fullKey='cuemaster_api_'+cacheKey;
+    if(cacheKey){
+      const cached=localStorage.getItem(fullKey);
+      if(cached){try{const d=JSON.parse(cached);if(Date.now()-d.ts<(cacheDuration||3600000)){return d.data}}catch(e){}}
+    }
+    try{
+      const resp=await fetch(this.baseURL+endpoint,{signal:AbortSignal.timeout(8000)});
+      if(!resp.ok)throw new Error('HTTP '+resp.status);
+      const text=await resp.text();
+      let data=null;
+      try{data=JSON.parse(text)}catch(e){/* XML or other format */}
+      if(cacheKey&&data){localStorage.setItem(fullKey,JSON.stringify({ts:Date.now(),data}))}
+      return data;
+    }catch(e){/* fall through to mock */}
+    if(cacheKey){const stale=localStorage.getItem(fullKey);if(stale){try{return JSON.parse(stale).data}catch(e){}}}
+    return null;
+  },
+  async getSchedule(season){
+    const sYear=parseInt(season.split('/')[0]);
+    return await this.fetch('?t=5&s='+sYear,'schedule_'+sYear,6*3600000);
+  },
+  async getRankings(season){
+    const sYear=parseInt(season.split('/')[0]);
+    return await this.fetch('?rt=MoneyRankings&s='+sYear,'rankings_'+sYear,3600000);
+  },
+  async getLiveMatches(){
+    return await this.fetch('?t=4','live_matches',60000);
+  }
+};
+
+// ---- Remote data URL (set after GitHub/Vercel deployment) ----
+const REMOTE_DATA_URL='https://raw.githubusercontent.com/AAnkrr/CueMaster/main/data/output/snooker-data.json';
+
+async function refreshAPIData(){
+  // Strategy 1: try to load generated data file (local or via remote fetch)
+  try{
+    let remoteData=null;
+    // If the local data file already loaded with real data, skip fetch
+    const localD=window.__SNOOKER_API_DATA__;
+    if(localD&&localD.source&&localD.source!=='mock-initial'&&localD.source!=='mock'){apiOnline=true;apiLastUpdate=localD.generated;return true}
+    // Try remote fetch (GitHub/Vercel)
+    if(REMOTE_DATA_URL&&!REMOTE_DATA_URL.includes('YOUR_USERNAME')){
+      const resp=await fetch(REMOTE_DATA_URL,{signal:AbortSignal.timeout(10000)});
+      if(resp.ok){const data=await resp.json();window.__SNOOKER_API_DATA__=data;apiOnline=true;apiLastUpdate=data.generated||new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});return true}
+    }
+  }catch(e){/* fall through */}
+  // Strategy 2: try api.snooker.org directly (works from non-China IPs)
+  try{
+    const sched=await APIService.getSchedule(curSeason);
+    const ranks=await APIService.getRankings(curSeason);
+    const live=await APIService.getLiveMatches();
+    if(sched||ranks||live){apiOnline=true;apiLastUpdate=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});return true}
+  }catch(e){}
+  apiOnline=false;return false;
+}
+
+function getApiStatusHtml(){
+  const d=window.__SNOOKER_API_DATA__;
+  const hasFresh=d&&d.source&&d.source!=='mock-initial'&&d.source!=='mock';
+  if(hasFresh){return`<span class="api-status online" title="数据更新于 ${d.generated||'?'}">🟢 实时数据 (${d.source})</span>`}
+  if(apiOnline)return`<span class="api-status online" title="API 最后更新: ${apiLastUpdate||'刚刚'}">🟢 实时数据</span>`;
+  return`<span class="api-status offline" title="使用内置 mock 数据&#10;api.snooker.org 从大陆 IP 被拦截&#10;部署 Vercel 可获取实时数据" style="cursor:default">🟡 离线数据</span>`;
+}
+
+// ====== MAIN PLAYER ======
+function loadMP(){try{mainPlayer=JSON.parse(localStorage.getItem('cuemaster_mp')||'null')}catch(e){mainPlayer=null};renderMPB()}
+function saveMP(p){mainPlayer=p;localStorage.setItem('cuemaster_mp',JSON.stringify(p));renderMPB()}
+function clearMP(){mainPlayer=null;localStorage.removeItem('cuemaster_mp');renderMPB()}
+function renderMPB(){
+  const el=document.getElementById('mpb');if(!mainPlayer){el.innerHTML='';return}
+  const p=mainPlayer;let rkTxt='';if(p.rk){rkTxt=`排名 <b style="color:var(--gold)">No.${p.rk}</b>`;if(p.ch>0)rkTxt+=` <span style="color:#44CC44">↑${p.ch}</span>`;else if(p.ch<0)rkTxt+=` <span style="color:var(--red)">↓${Math.abs(p.ch)}</span>`}
+  el.innerHTML=`<div class="mp2" onclick="showPlayerDetail('${p.id}')">${avHtml(p,34)}<div class="mpi2"><div class="mpn2">${p.f} 你的主球员 · ${p.n}</div><div class="mpr2">${rkTxt}</div></div><div class="mppt2">${fmtPts(p.pt,p.sp||curSport)}</div><span class="cls2" onclick="event.stopPropagation();clearMP()">✕</span></div>`;
+}
+function openPM(){
+  document.getElementById('pm').classList.remove('hidden');const allP=[];Object.entries(SP).forEach(([sp,pl])=>{pl.forEach(p2=>allP.push({...p2,sp}))});
+  let h='';const favIds=favs.filter(id=>allP.some(p2=>p2.id===id));
+  if(favIds.length>0){h+='<div style="font-size:11px;color:var(--t3);font-weight:600;padding:4px 0">⭐ 我的关注</div>';favIds.forEach(id=>{const p2=allP.find(x=>x.id===id);if(p2)h+=pmOption(p2)})}
+  h+='<div style="font-size:11px;color:var(--t3);font-weight:600;padding:8px 0 4px">全部球员</div>';allP.forEach(p2=>h+=pmOption(p2));
+  document.getElementById('plist').innerHTML=h;
+}
+function pmOption(p){return`<div class="mo" onclick="saveMP(${JSON.stringify(p).replace(/"/g,'&quot;')});closePM()">${avHtml(p,30)}<span style="flex:1;margin-left:8px;font-size:12px;font-weight:600;color:var(--t1)">${p.f} ${p.n}</span><span style="font-size:10px;color:var(--t3)">${p.z} · ${p.sp==='snooker'?'斯诺克':p.sp==='chinese8'?'中式八球':'九球'}</span></div>`}
+function closePM(){document.getElementById('pm').classList.add('hidden')}
+
+// ====== REMINDERS (see Pro & Reminder Management above for setReminder) ======
+function isReminderSet(tid){return !!reminders[tid]}
+
+// ====== SPORT / TAB SWITCHING ======
+function selSport(s){curSport=s;document.querySelectorAll('.so').forEach(e=>e.classList.remove('ac'));document.querySelector(`[data-s="${s}"]`).classList.add('ac');if(s==='snooker'){document.getElementById('ssbtn').classList.remove('hidden');document.getElementById('ssbtn').textContent=curSeason+' ▾'}else document.getElementById('ssbtn').classList.add('hidden');renderMain()}
+function swTab(t){
+  curTab=t;document.querySelectorAll('.ti2').forEach(e=>e.classList.remove('ac'));document.querySelector(`[data-t="${t}"]`).classList.add('ac');
+  document.getElementById('main').classList.remove('hidden');document.getElementById('dv').classList.add('hidden');
+  document.getElementById('tab').classList.remove('hidden');document.getElementById('sp').classList.remove('hidden');
+  if(t==='profile'||t==='widgets'){document.getElementById('sp').classList.add('hidden');document.getElementById('ssbtn').classList.add('hidden')}
+  else if(curSport==='snooker')document.getElementById('ssbtn').classList.remove('hidden');
+  document.getElementById('pt').textContent={schedule:'赛程',rankings:'排名',players:'球员',widgets:'小组件',profile:'我的'}[t];
+  renderMain();
+}
+function showMain(){document.getElementById('main').classList.remove('hidden');document.getElementById('dv').classList.add('hidden');document.getElementById('tab').classList.remove('hidden');document.getElementById('sp').classList.remove('hidden');renderMain()}
+function toggleSeason(){document.getElementById('sm').classList.toggle('hidden')}
+function selSeason(s){curSeason=s;document.getElementById('ssbtn').textContent=curSeason+' ▾';document.getElementById('sm').classList.add('hidden');renderMain()}
+
+// ====== RENDER ======
+function renderMain(){
+  loadMP();
+  switch(curTab){case'schedule':rSchedule();break;case'rankings':rRankings();break;case'players':rPlayers();break;case'widgets':rWidgets();break;case'profile':rProfile();break}
+}
+
+function rSchedule(){
+  const tl=TS[curSport]||{};let tlist=curSport==='snooker'?(tl[curSeason]||[]):tl;
+  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">${curSport==='snooker'?getApiStatusHtml():'<span style="font-size:9px;color:var(--t3)">离线数据</span>'}<span style="font-size:9px;color:var(--t3)">${tlist.length} 项赛事</span></div>`;
+  html+=`<div class="fb"><div class="fp ac" onclick="filterSched('all',this)">全部</div><div class="fp" style="color:var(--tc)" onclick="filterSched('triple-crown',this)">🏆 顶级</div><div class="fp" style="color:var(--gold)" onclick="filterSched('ranking',this)">排名赛</div><div class="fp" style="color:var(--inv)" onclick="filterSched('invitational',this)">邀请赛</div></div>`;
+  const live=tlist.filter(t=>t.st==='live');const up=tlist.filter(t=>t.st==='upcoming');const done=tlist.filter(t=>t.st==='completed');
+  if(live.length){html+='<div class="st live">● 进行中</div>';live.forEach(t=>html+=tCard(t))}
+  if(up.length){html+='<div class="st up">📅 即将到来</div>';up.forEach(t=>html+=tCard(t))}
+  if(done.length){html+='<div class="st done">✓ 已结束</div>';done.slice(0,8).forEach(t=>html+=tCard(t,true))}
+  document.getElementById('pc').innerHTML=html;
+  let sh='';SEASONS.forEach(s=>{sh+=`<div class="sm2${s===curSeason?' ac3':''}" onclick="selSeason('${s}')"><span style="font-size:14px;color:var(--t2)">${s} 赛季</span>${s===curSeason?'<span style="color:var(--greenL);font-size:15px">✓</span>':''}</div>`});
+  document.getElementById('sl').innerHTML=sh;
+}
+function tCard(t,compact){
+  const cc=t.c==='triple-crown'?'tc':t.c==='ranking'?'rk':'inv2';const cb=t.c==='triple-crown'?'🏆 顶级赛':t.c==='ranking'?'排名赛':t.c==='major'?'大赛':'邀请赛';
+  const days=gd(t.s);let cdHtml='';
+  if(t.st==='live')cdHtml='<span class="cd live">● 进行中</span>';else if(t.st==='upcoming')cdHtml=`<span class="cd">${days>0?days+'天后':'即将开始'}</span>`;else cdHtml='<span class="done">已结束</span>';
+  const timeHtml=t.matchTime?` <span class="mt2">${t.matchTime}</span>`:'';
+  const isSet=isReminderSet(t.id);const remHtml=(t.st==='live'||t.st==='upcoming')?`<span style="cursor:pointer;font-size:12px;margin-left:6px" onclick="event.stopPropagation();${canSetReminder()||isSet?`setReminder('${t.id}','${t.n}','${t.s}','${t.matchTime||''}')`:`togglePro()`}" title="${isSet?'取消提醒':canSetReminder()?'设置提醒':'Pro 专属'}">${isSet?'🔔':canSetReminder()?'🔕':'🔒'}</span>`:'';
+  return`<div class="tc2 ${cc}" onclick="showTD('${t.id}')"><div class="tb"><span class="bd ${cc}">${cb}</span>${compact?'':'<span class="bd pr">'+t.p+'</span>'}${timeHtml}${remHtml}</div><div class="tn">${t.n}</div>${compact?'':'<div class="tl">📍 '+t.v+', '+t.ci+', '+t.co+'</div>'}<div class="tf"><span class="td">${fd(t.s)} - ${fd(t.e)}</span>${cdHtml}</div></div>`;
+}
+function filterSched(f,el){
+  document.querySelectorAll('#pc .fb .fp').forEach(e=>e.classList.remove('ac'));el.classList.add('ac');
+  const tl=TS[curSport]||{};let tlist=curSport==='snooker'?(tl[curSeason]||[]):tl;
+  if(f!=='all')tlist=tlist.filter(t=>t.c===f||(f==='triple-crown'&&t.c==='triple-crown'));
+  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">${curSport==='snooker'?getApiStatusHtml():'<span style="font-size:9px;color:var(--t3)">离线数据</span>'}<span style="font-size:9px;color:var(--t3)">${tlist.length} 项赛事</span></div>`;
+  html+=`<div class="fb"><div class="fp${f==='all'?' ac':''}" onclick="filterSched('all',this)">全部</div><div class="fp${f==='triple-crown'?' ac':''}" style="color:var(--tc)" onclick="filterSched('triple-crown',this)">🏆 顶级</div><div class="fp${f==='ranking'?' ac':''}" style="color:var(--gold)" onclick="filterSched('ranking',this)">排名赛</div><div class="fp${f==='invitational'?' ac':''}" style="color:var(--inv)" onclick="filterSched('invitational',this)">邀请赛</div></div>`;
+  const live=tlist.filter(t=>t.st==='live');const up=tlist.filter(t=>t.st==='upcoming');const done=tlist.filter(t=>t.st==='completed');
+  if(live.length){html+='<div class="st live">● 进行中</div>';live.forEach(t=>html+=tCard(t))}
+  if(up.length){html+='<div class="st up">📅 即将到来</div>';up.forEach(t=>html+=tCard(t))}
+  if(done.length){html+='<div class="st done">✓ 已结束</div>';done.slice(0,8).forEach(t=>html+=tCard(t,true))}
+  document.getElementById('pc').innerHTML=html;
+}
+
+// Rankings — with Chinese players separated at bottom
+function rRankings(){
+  const pl=SP[curSport]||[];let mainPlayers=pl.slice(0,16);
+  let allOthers=pl.slice(16);
+  // Separate Chinese from others in the 17-36 range
+  let chineseOthers=allOthers.filter(p=>p.na==='CHN');
+  let intlOthers=allOthers.filter(p=>p.na!=='CHN');
+
+  let html='';
+  mainPlayers.forEach((p,i)=>{
+    const r=i+1;const rc=r===1?'g1':r===2?'g2':r===3?'g3':'';
+    html+=rankRow(p,r,rc);
+  });
+
+  if(intlOthers.length>0){
+    html+='<div class="cat-sep"><div class="line"></div><span class="lbl">国际球员 17-36</span><div class="line"></div></div>';
+    intlOthers.forEach((p,i)=>{const r=i+17;html+=rankRow(p,r,'');});
+  }
+
+  if(chineseOthers.length>0){
+    html+='<div class="cat-sep"><div class="line"></div><span class="lbl">🇨🇳 中国球员</span><div class="line"></div></div>';
+    chineseOthers.forEach((p,i)=>{const or=pl.indexOf(p)+1;html+=rankRow(p,or,'');});
+  }
+
+  document.getElementById('pc').innerHTML=html+'<div style="text-align:center;font-size:10px;color:var(--t3);padding:12px">排名随赛事更新 · 数据来源: WST</div>';
+}
+function rankRow(p,r,rc){
+  const ch=p.ch>0?`<span class="rc up">↑${p.ch}</span>`:p.ch<0?`<span class="rc dn">↓${Math.abs(p.ch)}</span>`:`<span class="rc sm">→</span>`;
+  return`<div class="rr${r<=3?' t3':''}" onclick="showPlayerDetail('${p.id}')"><span class="rn ${rc||''}">${r}</span>${avHtml(p,34)}<div class="nc"><div class="nm">${p.n}</div><div class="na">${p.na} · ${p.z}</div></div><span class="rp">${fmtPts(p.pt,curSport)}</span>${ch}</div>`;
+}
+
+// Players
+function rPlayers(){
+  const pl=SP[curSport]||[];
+  let html=`<div class="sb2"><span>🔍</span><input placeholder="搜索球员..." oninput="searchP(this.value)"></div>
+    <div class="fb"><div class="fp ac" onclick="filterP('all',this)">全部</div><div class="fp" onclick="filterP('top16',this)">Top 16</div><div class="fp" onclick="filterP('chinese',this)">🇨🇳 中国</div><div class="fp" onclick="filterP('fav',this)">★ 关注</div></div><div id="pl2">`;
+  pl.forEach(p=>{const isFav=favs.includes(p.id);html+=`<div class="rr" onclick="showPlayerDetail('${p.id}')">${avHtml(p,34)}<div class="nc"><div class="nm">${p.f} ${p.n}</div><div class="na">${p.z} · ${p.na}</div></div><span class="rp">${fmtPts(p.pt,curSport)}</span><span style="cursor:pointer;font-size:17px;padding:6px;color:${isFav?'#FFD700':'var(--t3)'}" onclick="event.stopPropagation();toggleFav('${p.id}')">${isFav?'★':'☆'}</span></div>`});
+  document.getElementById('pc').innerHTML=html+'</div>';
+}
+function searchP(q){document.querySelectorAll('#pl2 .rr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none'})}
+function filterP(f,el){
+  document.querySelectorAll('#pc .fb .fp').forEach(e=>e.classList.remove('ac'));el.classList.add('ac');
+  const pl=SP[curSport]||[];document.querySelectorAll('#pl2 .rr').forEach((r,i)=>{
+    const p=pl[i];if(!p)return;
+    if(f==='all')r.style.display='';else if(f==='top16')r.style.display=i<16?'':'none';else if(f==='chinese')r.style.display=p.na==='CHN'?'':'none';else if(f==='fav')r.style.display=favs.includes(p.id)?'':'none';
+  });
+}
+function toggleFav(id){if(favs.includes(id))favs=favs.filter(x=>x!==id);else favs.push(id);rPlayers()}
+
+// Widgets
+function rWidgets(){
+  const nextT=Object.values(TS.snooker).flat().find(t=>t.st==='live')||Object.values(TS.snooker).flat().find(t=>t.st==='upcoming');
+  const nextName=nextT?nextT.n:'上海大师赛';const nextDate=nextT?fd(nextT.s):'7月28日';const days=nextT?gd(nextT.s):0;
+  const THEMES=[
+    {id:'green',name:'经典绿',desc:'斯诺克球桌绿',free:true,cls:'th-green',icon:'🎱'},
+    {id:'midnight',name:'暗夜模式',desc:'纯黑极简',free:true,cls:'th-midnight',icon:'🌙'},
+    {id:'gold',name:'金色荣耀',desc:'冠军金配色',free:true,cls:'th-gold',icon:'👑'},
+    {id:'orange',name:'活力橙',desc:'暖色渐变',free:false,cls:'th-orange',icon:'🔥'},
+    {id:'white',name:'极简白',desc:'明亮轻量',free:false,cls:'th-white',icon:'☀️'},
+    {id:'ocean',name:'海洋蓝',desc:'深邃蓝调',free:false,cls:'th-ocean',icon:'🌊'},
+    {id:'lavender',name:'薰衣草紫',desc:'优雅紫韵',free:false,cls:'th-lavender',icon:'💜'},
+    {id:'red',name:'中国红',desc:'红金祥瑞',free:false,cls:'th-red',icon:'🧧'},
+  ];
+  const selectedTheme=curSport==='snooker'?'green':curSport==='chinese8'?'red':'ocean';
+  // Build widget mockup cards
+  function widgetMockup(th,type){
+    const locked=!isPro()&&!th.free;
+    let inner='';
+    if(type==='countdown'){
+      inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 倒计时</div></div>
+        <div><div class="wv">${days}天</div><div class="ws">${nextName} · ${nextDate}</div></div>`;
+    }else if(type==='ranking'){
+      const p=SP.snooker[0]||{};
+      inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 排名</div></div>
+        <div><div class="wv" style="font-size:18px">🥇 ${p.n.split(' ').pop()}</div><div class="ws">世界排名 · 实时更新</div></div>`;
+    }else if(type==='schedule'){
+      inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 赛程</div></div>
+        <div><div class="wv" style="font-size:16px">${nextName}</div><div class="ws">${nextDate} · ${nextT&&nextT.st==='live'?'● 进行中':days+'天后开始'}</div></div>`;
+    }else if(type==='player'){
+      const p=mainPlayer||SP.snooker[0];
+      inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 主球员</div></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800">${p.n.charAt(0)}</div><div><div style="font-size:13px;font-weight:700">${p.f} ${p.n}</div><div class="ws">世界第 ${p.rk||'-'} 位</div></div></div>`;
+    }
+    return`<div class="wc ${th.cls}">${inner}${locked?`<div class="lock-overlay"><div class="lock-icon">🔒</div><div class="lock-text">Pro 专属</div></div>`:''}</div>`;
+  }
+  let html='';
+  // Widget type selector
+  html+=`<div class="wg-tabs">
+    <div class="wg-tab ac" onclick="switchWidgetType('countdown',this)">⏱️ 倒计时</div>
+    <div class="wg-tab" onclick="switchWidgetType('ranking',this)">📊 排名</div>
+    <div class="wg-tab" onclick="switchWidgetType('schedule',this)">📅 赛程</div>
+    <div class="wg-tab" onclick="switchWidgetType('player',this)">⭐ 主球员</div>
+  </div>`;
+  // Theme grid
+  html+=`<div class="wg-header"><span class="wgh-t">🎨 8 种主题 · ${isPro()?'全部已解锁':'3 免费 + 5 Pro'}</span>${isPro()?`<span class="pro-badge">PRO</span>`:`<span style="font-size:9px;color:var(--gold);cursor:pointer" onclick="togglePro()">升级解锁全部 ›</span>`}</div>`;
+  html+=`<div class="wg">`;
+  THEMES.forEach(th=>{
+    html+=widgetMockup(th,'countdown');
+  });
+  html+=`</div>`;
+  // Comparison
+  html+=`<div class="wg-compare">
+    <div class="free-side"><div class="side-label free">🆓 免费版</div>
+      <div class="side-item">3 种主题</div><div class="side-item">固定配色</div><div class="side-item">无透明背景</div><div class="side-item">无 Live Activities</div>
+    </div>
+    <div class="pro-side"><div class="side-label pro">👑 Pro 版</div>
+      <div class="side-item" style="color:var(--gold)">8 种主题</div><div class="side-item" style="color:var(--gold)">自定义配色</div><div class="side-item" style="color:var(--gold)">透明背景模式</div><div class="side-item" style="color:var(--gold)">锁屏 Live Activities</div>
+    </div>
+  </div>`;
+  // Pro card (free users)
+  if(!isPro()){
+    html+=`<div class="prc"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:15px">👑</span><span class="prt">解锁全部小组件主题</span></div><div class="prd">CueMaster Pro 解锁 5 种高级主题、透明背景、自定义颜色、锁屏 Live Activities 实时比分。</div><div class="pl"><div class="pl2"><div>月订阅</div><div class="price">¥18/月</div></div><div class="pl2 rec" onclick="togglePro()"><div class="rb">推荐</div><div>年订阅</div><div class="price">¥128/年</div></div></div></div>`;
+  }else{
+    html+=`<div style="text-align:center;padding:12px;color:var(--gold);font-size:11px">👑 Pro 已激活 · 8 种主题随意切换</div>`;
+  }
+  document.getElementById('pc').innerHTML=html;
+}
+// Widget type switcher (keeps state via DOM)
+function switchWidgetType(type,el){
+  document.querySelectorAll('.wg-tab').forEach(e=>e.classList.remove('ac'));el.classList.add('ac');
+  const THEMES2=[
+    {id:'green',name:'经典绿',desc:'斯诺克球桌绿',free:true,cls:'th-green',icon:'🎱'},
+    {id:'midnight',name:'暗夜模式',desc:'纯黑极简',free:true,cls:'th-midnight',icon:'🌙'},
+    {id:'gold',name:'金色荣耀',desc:'冠军金配色',free:true,cls:'th-gold',icon:'👑'},
+    {id:'orange',name:'活力橙',desc:'暖色渐变',free:false,cls:'th-orange',icon:'🔥'},
+    {id:'white',name:'极简白',desc:'明亮轻量',free:false,cls:'th-white',icon:'☀️'},
+    {id:'ocean',name:'海洋蓝',desc:'深邃蓝调',free:false,cls:'th-ocean',icon:'🌊'},
+    {id:'lavender',name:'薰衣草紫',desc:'优雅紫韵',free:false,cls:'th-lavender',icon:'💜'},
+    {id:'red',name:'中国红',desc:'红金祥瑞',free:false,cls:'th-red',icon:'🧧'},
+  ];
+  const nextT2=Object.values(TS.snooker).flat().find(t=>t.st==='live')||Object.values(TS.snooker).flat().find(t=>t.st==='upcoming');
+  const nextName2=nextT2?nextT2.n:'上海大师赛';const nextDate2=nextT2?fd(nextT2.s):'7月28日';const days2=nextT2?gd(nextT2.s):0;
+  let gridHtml='';THEMES2.forEach(th=>{
+    const locked=!isPro()&&!th.free;
+    let inner='';
+    if(type==='countdown'){inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 倒计时</div></div><div><div class="wv">${days2}天</div><div class="ws">${nextName2} · ${nextDate2}</div></div>`;}
+    else if(type==='ranking'){const p=SP.snooker[0]||{};inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 排名</div></div><div><div class="wv" style="font-size:18px">🥇 ${p.n.split(' ').pop()}</div><div class="ws">世界排名 · 实时更新</div></div>`;}
+    else if(type==='schedule'){inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 赛程</div></div><div><div class="wv" style="font-size:16px">${nextName2}</div><div class="ws">${nextDate2} · ${nextT2&&nextT2.st==='live'?'● 进行中':days2+'天后开始'}</div></div>`;}
+    else if(type==='player'){const p2=mainPlayer||SP.snooker[0];inner=`<div class="wh"><div class="wi">${th.icon}</div><div class="wn">CueMaster · 主球员</div></div><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800">${p2.n.charAt(0)}</div><div><div style="font-size:13px;font-weight:700">${p2.f} ${p2.n}</div><div class="ws">世界第 ${p2.rk||'-'} 位</div></div></div>`;}
+    gridHtml+=`<div class="wc ${th.cls}">${inner}${locked?`<div class="lock-overlay"><div class="lock-icon">🔒</div><div class="lock-text">Pro 专属</div></div>`:''}</div>`;
+  });
+  document.querySelector('.wg').innerHTML=gridHtml;
+}
+function rProfile(){
+  let mpHtml='';
+  if(mainPlayer){const p=mainPlayer;
+    mpHtml=`<div style="margin-bottom:14px"><div style="font-size:10px;color:var(--t3);font-weight:600;padding:4px 0 6px">⭐ 我的主球员</div><div class="pf2" onclick="openPM()">${avHtml(p,44)}<div style="flex:1;margin-left:10px"><div style="font-weight:700;font-size:14px;color:var(--t1)">${p.f} ${p.n}</div><div style="font-size:10px;color:var(--t2);margin-top:2px">${p.z} · ${p.na}</div>${p.rk?`<div style="font-size:10px;color:var(--gold);font-weight:600;margin-top:2px">🏆 世界第 ${p.rk} 位</div>`:''}</div><span style="color:var(--t2)">更换 ›</span></div></div>`;
+  }else{mpHtml=`<div style="margin-bottom:14px"><div style="font-size:10px;color:var(--t3);font-weight:600;padding:4px 0 6px">⭐ 我的主球员</div><div style="text-align:center;padding:20px;background:var(--sur);border-radius:var(--r);border:1px dashed var(--gold)30;cursor:pointer" onclick="openPM()"><div style="font-size:24px;margin-bottom:4px">⭐</div><div style="color:var(--gold);font-weight:600;font-size:12px">选择你的主球员</div><div style="color:var(--t3);font-size:10px;margin-top:3px">选择后主页将展示该球员的专属信息</div></div></div>`}
+  // Pro subscription section
+  let proHtml='';
+  if(isPro()){
+    proHtml=`<div class="pro-section">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:20px">👑</span><div><div class="pro-title">CueMaster Pro 已激活</div><div class="pro-desc" style="margin-bottom:0">年订阅 · ¥128/年 · 下次续费 2027/08/01</div></div></div>
+      <div class="pro-features"><span class="pro-feat">✅ 无限提醒</span><span class="pro-feat">✅ 多时间点推送</span><span class="pro-feat">✅ 无广告</span><span class="pro-feat">✅ AI摘要</span><span class="pro-feat">✅ 8种主题</span></div>
+      <div class="rem-stats">📊 已设提醒：<span class="rem-used">${reminderCount()}</span> / ∞ · <span style="cursor:pointer;color:var(--gold);text-decoration:underline" onclick="togglePro()">管理订阅 ›</span></div>
+    </div>`;
+  }else{
+    proHtml=`<div class="pro-section">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:20px">👑</span><div><div class="pro-title">CueMaster Pro</div><div class="pro-desc">解锁无限提醒、赛前30分钟推送、AI赛事摘要、数据对比、8种小组件主题</div></div></div>
+      <div class="pro-features"><span class="pro-feat">✅ 无限提醒</span><span class="pro-feat">✅ 多时间点推送</span><span class="pro-feat free">1个提醒</span><span class="pro-feat free">仅赛前1天</span></div>
+      <div class="rem-stats">📊 免费提醒：<span class="rem-used">${reminderCount()}</span> / ${FREE_REMINDER_LIMIT} · ${reminderCount()>=FREE_REMINDER_LIMIT?'<span style="color:var(--red)">已达上限</span>':'<span style="color:var(--greenL)">可用</span>'}</div>
+      <div class="pl"><div class="pl2"><div>月订阅</div><div class="price">¥18/月</div></div><div class="pl2 rec" onclick="togglePro()"><div class="rb">推荐</div><div>年订阅</div><div class="price">¥128/年</div></div></div>
+      <div style="font-size:8px;color:var(--t3);text-align:center;margin-top:6px;cursor:pointer" onclick="togglePro()">🔧 开发模式：点击此处模拟激活 Pro</div>
+    </div>`;
+  }
+  document.getElementById('pc').innerHTML=mpHtml+proHtml+`
+    <div class="sg"><div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:10px 0 4px">🔔 通知</div><div class="sr"><span class="srl">推送通知</span><div class="tg"></div></div><div class="sr"><span class="srl">比赛提醒</span><div class="tg"></div></div><div class="sr"><span class="srl">重大新闻推送</span><div class="tg"></div></div><div class="sr"><span class="srl">管理已设提醒</span><span style="color:var(--gold);font-size:11px;cursor:pointer" onclick="clearAllReminders()">${reminderCount()>0?'清除全部 ('+reminderCount()+')':'无提醒'}</span></div></div>
+    <div class="sg"><div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:10px 0 4px">⚙️ 通用</div><div class="sr"><span class="srl">日历同步</span><div class="tg"></div></div><div class="sr"><span class="srl">语言</span><span style="color:var(--t2);font-size:12px">简体中文</span></div><div class="sr"><span class="srl">数据源</span>${getApiStatusHtml()}</div></div>
+    <div class="sg"><div style="font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:10px 0 4px">ℹ️ 关于</div><div class="sr"><span class="srl">版本</span><span style="color:var(--t1);font-size:12px">1.1.0 (Pro Ready)</span></div><div class="sr"><span class="srl">数据来源</span><span style="color:var(--t1);font-size:11px">WST / api.snooker.org / 公开数据</span></div></div>
+    <div style="font-size:9px;color:var(--t3);text-align:center;padding:8px 0 30px;line-height:1.5">CueMaster 并非 WST 官方应用<br>所有数据均来源于公开渠道${apiOnline?'<br>🟢 已连接 api.snooker.org 实时数据':''}</div>`;
+}
+
+function clearAllReminders(){
+  if(!confirm('确定清除所有 '+reminderCount()+' 个提醒吗？'))return;
+  reminders={};localStorage.setItem('cuemaster_reminders',JSON.stringify(reminders));rProfile();
+}
+
+// ====== DETAIL ======
+function liveSources(tid,t){const srcs=BROADCASTS[tid]||BROADCASTS['default'];let h='<div style="margin-bottom:12px"><div style="font-weight:700;margin-bottom:6px;color:var(--t1);font-size:13px">📺 观赛渠道 <span style="font-size:9px;color:var(--t3);font-weight:400">实时收集</span></div>';srcs.forEach(s=>{h+=`<a href="${s.url}" target="_blank" style="text-decoration:none"><div style="background:var(--sur);border-radius:10px;padding:10px;margin-bottom:4px;display:flex;align-items:center;gap:8px"><div style="width:32px;height:32px;border-radius:8px;background:var(--green)18;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">📡</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t1)">${s.platform}</div><div style="font-size:9px;color:var(--t2);margin-top:1px">${s.note} · ${s.quality} · ${s.free?'<span style="color:var(--greenL)">免费</span>':'<span style="color:var(--gold)">付费</span>'}</div></div><span style="color:var(--t3);font-size:16px">›</span></div></a>`});h+='<div style="font-size:8px;color:var(--t3);text-align:center;padding-top:3px">数据实时收集自虎牙/抖音/CCTV/央视频/咪咕等平台</div></div>';return h}
+
+function showTD(id){
+  let t=null;Object.values(TS).forEach(v=>{if(Array.isArray(v)){const f=v.find(x=>x.id===id);if(f)t=f}else{Object.values(v).forEach(v2=>{const f=v2.find(x=>x.id===id);if(f)t=f})}});
+  if(!t)return;
+  const cc=t.c==='triple-crown'?'tc':t.c==='ranking'?'rk':'inv2';const cb=t.c==='triple-crown'?'🏆 顶级赛':t.c==='ranking'?'排名赛':'邀请赛';
+  const stLabel=t.st==='live'?'<span style="color:var(--red)">● 进行中</span>':t.st==='upcoming'?'<span style="color:var(--greenL)">即将到来</span>':'已结束';
+  let bracketHtml='';const bracket=BRACKETS[id];
+  if(bracket){bracketHtml='<div style="font-weight:700;margin:12px 0 8px;color:var(--t1);font-size:14px">🏁 比赛对阵表</div>';bracket.rounds.forEach(rnd=>{bracketHtml+=`<div class="br-section"><div class="br-title">${rnd.nameZh} (${rnd.bestOf}局${rnd.bestOf>=19?'胜':'赢'})</div>`;rnd.matches.forEach(m=>{const p1=findPlayer(m.p1)||{n:'?',f:'❓',slug:null};const p2=findPlayer(m.p2)||{n:'?',f:'❓',slug:null};const w1=m.s1!==null&&m.s2!==null&&m.s1>m.s2;const w2=m.s1!==null&&m.s2!==null&&m.s2>m.s1;const s1=m.s1!==null?m.s1:'-';const s2=m.s2!==null?m.s2:'-';const ls=m.status==='live'?' ls':'';bracketHtml+=`<div class="br-match"><div class="br-row"><span class="br-p${w1?' br-w':''}">${avHtmlSmall(p1,16)} <span style="margin-left:3px">${p1.f} ${p1.n}</span></span><span class="br-score${ls}">${s1} - ${s2}</span><span class="br-p2${w2?' br-w':''}"><span style="margin-right:3px">${p2.n} ${p2.f}</span> ${avHtmlSmall(p2,16)}</span></div>${m.time?`<div style="text-align:center;font-size:8px;color:var(--t3);margin-top:2px">${m.status==='live'?'● 进行中 ':''}${m.time}</div>`:''}</div>`});bracketHtml+='</div>';})}
+  document.getElementById('dc').innerHTML=`
+    <div class="hero"><div style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><span class="bd ${cc}">${cb}</span>${t.c==='triple-crown'?'<span style="font-size:10px;color:orange">👑 Triple Crown</span>':''}<span style="margin-left:auto;font-size:11px">${stLabel}</span></div><div class="heron">${t.n}</div><div class="tl">📍 ${t.v}, ${t.ci}, ${t.co}</div><div style="font-size:11px;color:var(--t3);margin-top:3px">📅 ${fd(t.s)} - ${fd(t.e)}</div></div>
+    <div class="ig"><div class="ic"><div class="v2" style="color:var(--gold)">${t.p}</div><div class="l2">总奖金</div></div><div class="ic"><div class="v2">${fd(t.s)}</div><div class="l2">开始日期</div></div><div class="ic"><div class="v2">${t.ci}</div><div class="l2">举办城市</div></div></div>
+    ${t.ch?`<div style="background:var(--sur);border-radius:10px;padding:10px;margin-bottom:10px;display:flex;justify-content:space-between"><span style="color:var(--t2)">🏆 卫冕冠军</span><span style="font-weight:700;color:var(--gold)">${t.ch}</span></div>`:''}
+    ${(t.st==='live'||t.st==='upcoming')?`<div style="margin-bottom:10px"><div id="reminder_${t.id}" style="background:var(--sur);border-radius:10px;padding:12px;text-align:center;cursor:pointer" onclick="${canSetReminder()||isReminderSet(t.id)?`setReminder('${t.id}','${t.n}','${t.s}','${t.matchTime||''}')`:`togglePro()`}"><span style="font-size:15px">${isReminderSet(t.id)?'✅':canSetReminder()?'🔔':'🔒'}</span> <span style="color:var(--t1);font-weight:600;font-size:12px">${isReminderSet(t.id)?'✅ 已设置提醒':canSetReminder()?'设置比赛提醒':'🔒 Pro 专属提醒'}</span><div style="font-size:9px;color:var(--t3);margin-top:3px">${isReminderSet(t.id)?'将在比赛日当天通知你':canSetReminder()?(t.st==='live'?'现在就去观看！':(isPro()?'赛前30分钟 + 赛前1天双重推送':'赛前1天推送')):'升级 Pro 解锁无限提醒'}</div></div></div>`:''}
+    ${(t.st==='live'||t.st==='upcoming')?liveSources(id,t):''}
+    ${bracketHtml||(t.st==='upcoming'?'<div style="text-align:center;padding:24px;color:var(--t3)">赛事开始后将实时更新对阵</div>':'<div style="text-align:center;padding:24px;color:var(--t3)">暂无详细对阵数据</div>')}
+  `;
+  document.getElementById('main').classList.add('hidden');document.getElementById('dv').classList.remove('hidden');
+  document.getElementById('tab').classList.add('hidden');document.getElementById('sp').classList.add('hidden');document.getElementById('ssbtn').classList.add('hidden');
+}
+
+function showPlayerDetail(id){
+  let p=null;Object.values(SP).forEach(pl=>{const f=pl.find(x=>x.id===id);if(f)p=f});
+  if(!p)return;const rk=p.rk||0;
+  // Build upcoming matches list
+  const playerTids=getPlayerTournaments(id);
+  const allT=allTournaments();
+  const upcomingMatches=[];
+  playerTids.forEach(tid=>{
+    const t=allT.find(x=>x.id===tid);
+    if(t&&(t.st==='upcoming'||t.st==='live')){
+      // Find opponent from bracket if available
+      let opponent=null;let matchTime=t.matchTime||null;
+      const bracket=BRACKETS[tid];
+      if(bracket){bracket.rounds.forEach(rnd=>{rnd.matches.forEach(m=>{if((m.p1===id||m.p2===id)&&(m.status==='upcoming'||m.status==='live')){const oid=m.p1===id?m.p2:m.p1;opponent=findPlayer(oid);if(m.time)matchTime=m.time;}})});}
+      upcomingMatches.push({t,matchTime,opponent});
+    }
+  });
+  // Sort by date
+  upcomingMatches.sort((a,b)=>new Date(a.t.s)-new Date(b.t.s));
+  // Build upcoming HTML
+  let upcomingHtml='';
+  if(upcomingMatches.length>0){
+    upcomingHtml='<div class="upcoming-section"><div class="upcoming-header">📅 即将到来的比赛 <span style="font-size:9px;color:var(--t3);font-weight:400">'+upcomingMatches.length+'场</span></div>';
+    upcomingMatches.forEach(um=>{
+      const t=um.t;const days=gd(t.s);
+      const stLabel=t.st==='live'?'● 进行中':(days>0?days+'天后':'即将开始');
+      const oppHtml=um.opponent?`<span style="color:var(--t3)"> vs </span>${um.opponent.f} ${um.opponent.n}`:'';
+      const isSet=isReminderSet(t.id);
+      const canSet=canSetReminder()||isSet;
+      const btnClass=isSet?'reminder-btn2 set':(canSet?'reminder-btn2':'reminder-btn2 pro-gated');
+      upcomingHtml+=`<div class="upcoming-match" onclick="showTD('${t.id}')">
+        <div style="font-size:18px;flex-shrink:0">🏆</div>
+        <div class="um-info"><div class="um-name">${t.n}${oppHtml}</div><div class="um-meta">📍 ${t.ci}, ${t.co} · ${fd(t.s)} · ${stLabel}</div></div>
+        ${um.matchTime?`<div class="um-time">${um.matchTime}</div>`:''}
+        <span class="${btnClass}" onclick="event.stopPropagation();${canSet?`setReminder('${t.id}','${t.n}','${t.s}','${um.matchTime||''}')`:`togglePro()`}" title="${isSet?'取消提醒':canSet?'设置提醒':'Pro 专属功能'}">${isSet?'✅ 已提醒':canSet?'🔔 提醒':'🔒 Pro'}</span>
+      </div>`;
+    });
+    upcomingHtml+='</div>';
+  }
+  document.getElementById('dc').innerHTML=`
+    <div style="text-align:center;padding:20px;background:var(--sur);border-radius:var(--r);margin-bottom:12px">
+      ${avHtml(p,60)}<div style="margin-top:8px"></div>
+      <div style="font-size:18px;font-weight:800;color:var(--t1)">${p.n}</div><div style="font-size:12px;color:var(--t2);margin-top:2px">${p.z}</div>
+      <div style="font-size:16px;margin-top:4px">${p.f} ${p.na}</div>
+      ${rk?`<div style="margin-top:8px;display:inline-block;padding:5px 14px;background:var(--gold)15;border-radius:20px;color:var(--gold);font-weight:700;font-size:12px">🏆 世界第 ${rk} 位</div>`:''}
+    </div>
+    ${upcomingHtml}
+    <div class="ig"><div class="ic"><div class="v2" style="color:var(--greenL)">No.${rk||'-'}</div><div class="l2">当前排名</div></div><div class="ic"><div class="v2">${fmtPts(p.pt,p.sp||curSport)}</div><div class="l2">积分/奖金</div></div><div class="ic"><div class="v2">${p.tp}</div><div class="l2">转职业</div></div></div>
+    <div style="background:var(--sur);border-radius:10px;padding:12px;margin-bottom:12px"><div style="font-weight:700;margin-bottom:8px;color:var(--t1)">2025/26 赛季数据</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><div class="ic"><div class="v2">${50+rk}</div><div class="l2">参赛</div></div><div class="ic"><div class="v2">${35+rk}</div><div class="l2">胜场</div></div><div class="ic"><div class="v2">${60+Math.floor(Math.random()*20)}%</div><div class="l2">胜率</div></div><div class="ic"><div class="v2">${40+rk*2}</div><div class="l2">破百</div></div><div class="ic"><div class="v2">${rk===3?'147 🔥':(130+Math.floor(Math.random()*16))}</div><div class="l2">最高分</div></div><div class="ic"><div class="v2">${fmtPts(p.pt,p.sp||curSport)}</div><div class="l2">赛季奖金</div></div></div></div>
+    <div style="font-weight:700;margin-bottom:6px;color:var(--t1)">🏅 荣誉殿堂</div>
+    <div style="background:var(--sur);border-radius:10px;padding:10px;margin-bottom:12px">
+      ${(ACHIEVEMENTS[id]||[]).length>0?ACHIEVEMENTS[id].map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:10px;color:var(--gold);font-weight:700;min-width:36px">${a.y}</span><span style="font-size:11px;color:var(--t1)">${a.t}</span></div>`).join(''):'<div style="text-align:center;padding:10px;color:var(--t3);font-size:11px">暂无荣誉记录</div>'}
+    </div>
+    <div style="font-weight:700;margin-bottom:6px;color:var(--t1)">近期比赛</div>
+    <div style="background:var(--sur);border-radius:8px;padding:10px;margin-bottom:5px;display:flex;align-items:center;gap:8px"><span style="color:#44CC44;font-weight:700;font-size:12px">●</span><div style="flex:1"><div style="font-size:11px;font-weight:500;color:var(--t1)">世锦赛 半决赛</div><div style="font-size:9px;color:var(--t3)">vs N.Robertson</div></div><span style="font-weight:700;color:#44CC44;font-size:11px">17 - 12</span><span style="font-size:9px;color:var(--t3)">5/2</span></div>
+    <div style="background:var(--sur);border-radius:8px;padding:10px;margin-bottom:5px;display:flex;align-items:center;gap:8px"><span style="color:var(--red);font-weight:700;font-size:12px">●</span><div style="flex:1"><div style="font-size:11px;font-weight:500;color:var(--t1)">世锦赛 决赛</div><div style="font-size:9px;color:var(--t3)">vs J.Trump</div></div><span style="font-weight:700;color:var(--red);font-size:11px">15 - 18</span><span style="font-size:9px;color:var(--t3)">5/4</span></div>
+  `;
+  document.getElementById('main').classList.add('hidden');document.getElementById('dv').classList.remove('hidden');
+  document.getElementById('tab').classList.add('hidden');document.getElementById('sp').classList.add('hidden');document.getElementById('ssbtn').classList.add('hidden');
+}
+
+// ====== INIT ======
+loadMP();
+let sh='';SEASONS.forEach(s=>{sh+=`<div class="sm2${s===curSeason?' ac3':''}" onclick="selSeason('${s}')"><span style="font-size:14px;color:var(--t2)">${s} 赛季</span>${s===curSeason?'<span style="color:var(--greenL);font-size:15px">✓</span>':''}</div>`});
+document.getElementById('sl').innerHTML=sh;
+renderMain();
+// Background: try to connect to snooker.org API (fails gracefully)
+setTimeout(()=>{refreshAPIData().then(ok=>{if(ok&&curTab==='schedule')renderMain()})},2000);
+</script>
+</body>
+</html>
