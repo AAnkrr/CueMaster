@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-09T17:36:13.274Z",
+  "generated": "2026-10-10T02:56:49.410Z",
   "source": "api.snooker.org",
   "season": "2026/27",
   "events": [
@@ -3395,9 +3395,9 @@
       "AllRoundsAdded": true,
       "PhotoURLs": "",
       "NumCompetitors": 112,
-      "NumUpcoming": 71,
+      "NumUpcoming": 31,
       "NumActive": 0,
-      "NumResults": 40,
+      "NumResults": 80,
       "Note": "",
       "CommonNote": "",
       "DefendingChampion": 521,
