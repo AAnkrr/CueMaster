@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-21T02:11:26.878Z",
+  "generated": "2026-10-21T16:10:54.681Z",
   "source": "api.snooker.org",
   "season": "2026/27",
   "events": [
@@ -3732,8 +3732,8 @@
       "PhotoURLs": "",
       "NumCompetitors": 128,
       "NumUpcoming": 26,
-      "NumActive": 5,
-      "NumResults": 36,
+      "NumActive": 2,
+      "NumResults": 37,
       "Note": "",
       "CommonNote": "TNT/Eurosport/<a href=\"https://play.hbomax.com/live-sports-schedule?filter=snooker\">HBO Max</a>, <a href=\"https://www.wst.tv/videos\">WST Play</a>, <a href=\"https://www.huya.com/880214\">Huya</a>  & <a href=\"https://www.wst.tv/news/2026/october/08/how-to-watch-the-betvictor-northern-ireland-open-2026/\">more</a>",
       "DefendingChampion": 85,
